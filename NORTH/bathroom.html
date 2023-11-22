@@ -1,0 +1,57 @@
+<html language="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Wait. Have you been here before?">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Catalyst's Bathroom Sim</title>
+  <script src="utils.js"></script>
+  <style>
+    body {
+      background: black;
+      font-family: 'Courier New', Courier, monospace;
+      color: #c4c4c4;
+    }
+
+    #container {
+      background-color: #2c2d31;
+      width: 507px;
+      height: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #blurb {
+      height: 100px;
+      margin-top: 31px;
+      margin-left: 13px;
+      margin-right: 13px;
+    }
+  </style>
+  <script>
+    window.onload = ()=>{
+      blurbFromNetwork();
+    }
+
+    const blurbFromNetwork = async () => {
+      const url = 'blurb.txt'
+      const rawText = await httpGetAsync(url);
+      const blurb = document.querySelector("#blurb");
+      if (blurb) {
+        blurb.innerText = rawText;
+      }
+    }
+  </script>
+
+</head>
+
+
+<body>
+  <div id="container">
+    <img class="bathroom" src="full_bathroom.png">
+    <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
+  </div>
+</body>
+
+</html>
