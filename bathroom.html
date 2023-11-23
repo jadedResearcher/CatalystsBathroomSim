@@ -14,21 +14,22 @@
       color: #c4c4c4;
     }
 
-    select{
+    select {
       background-color: #141619;
       color: #7b818a;
       border: none;
       outline: none;
       border-radius: 5px;
       padding: 10px;
+      margin-bottom: 25px;
     }
 
-    option:hover{
+    option:hover {
       background-color: #303035;
       box-shadow: 0 0 10px 100px #303035 inset;
     }
 
-    option:checked{
+    option:checked {
       background-color: #303035;
       box-shadow: 0 0 10px 100px #303035 inset;
     }
@@ -59,19 +60,35 @@
     }
   </style>
   <script>
-    window.onload =  () => {
+    window.onload = () => {
       blurbFromNetwork();
       wireUpExits();
     }
 
-    const wireUpExits = async()=>{
+    const wireUpExits = async () => {
+      const blurb = document.querySelector("#blurb");
+
       const directions = await getDirections();
       const selection = document.querySelector("#door-selection");
-      selection.innerHTML = "";
-      for(let direction of Object.keys(directions)){
-        const option = createElementWithClassAndParent("option",selection);
-        option.innerText = "🚪 " + direction;
-        option.value = direction;
+      selection.innerHTML = `<option value="" disabled selected>Can You Leave?</option>`;
+      for (let direction of Object.keys(directions)) {
+        if (directions[direction]) {
+          const option = createElementWithClassAndParent("option", selection);
+          option.innerText = "🚪 " + direction;
+          if(directions[direction].includes("<html>")){
+            option.value = "GOTO: " +direction;
+          }else{
+            option.value=directions[direction];
+          }
+        }
+      }
+
+      selection.onchange = ()=>{
+        if(selection.value.includes("GOTO:")){
+          window.location.href=selection.value.split("GOTO:")[1]+"/bathroom"
+        }else{
+          blurb.innerText = selection.value;
+        }
       }
 
     }
@@ -127,14 +144,15 @@
 
 <body>
   <div id="container">
+    <select id="door-selection">
+      <option>🚪 NO EXITS FOUND</option>
+    </select>
     <div id="room-container">
       <img class="bathroom" src="full_bathroom.png">
       <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
 
     </div>
-    <select id="door-selection">
-      <option>🚪 NO EXITS FOUND</option>
-    </select>
+
   </div>
 </body>
 
