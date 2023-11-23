@@ -65,6 +65,13 @@
       wireUpExits();
     }
 
+    //render these in random but 'valid' locations. 
+    //first should ALWAYS be on the toilet tho
+    const grabImages  = async()=>{
+      let tmp = await getImages(".");
+      console.log("JR NOTE: ",tmp)
+    }
+
     const wireUpExits = async () => {
       const blurb = document.querySelector("#blurb");
 
