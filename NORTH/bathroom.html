@@ -9,29 +9,191 @@
   <script src="utils.js"></script>
   <style>
     body {
-      background: black;
+      background: #2a2b31;
       font-family: 'Courier New', Courier, monospace;
       color: #c4c4c4;
     }
 
+    #header {
+      display: flex;
+      justify-content: space-between;
+      width: 110%;
+    }
+
+    .audio-icon {
+      padding: 5px;
+      background-color: #141619;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .audio-icon svg {
+      color: #7b818a;
+      fill: #7b818a;
+    }
+
+
+    .audio-icon:hover {
+      background-color: #535358;
+    }
+
+
+    select {
+      background-color: #141619;
+      color: #7b818a;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 25px;
+      cursor: pointer;
+    }
+
+    option:hover {
+      background-color: #303035;
+      box-shadow: 0 0 10px 100px #303035 inset;
+    }
+
+    option:checked {
+      background-color: #303035;
+      box-shadow: 0 0 10px 100px #303035 inset;
+    }
+
     #container {
-      background-color: #2c2d31;
       width: 507px;
       height: fit-content;
       margin-left: auto;
       margin-right: auto;
+      padding: 25px;
+    }
+
+    #room-container {
+      background-color: #23252a;
+      width: 507px;
+      height: fit-content;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 5px;
+      border-left: 5px solid black;
+      position: relative;
+    }
+
+    #room-container .sprite {
+      position: absolute;
+      top: 0px;
+      transform: scaleX(-1);
+    }
+
+    #room-container .lobster {
+      position: absolute;
+      top: 0px;
     }
 
     #blurb {
-      height: 100px;
+      min-height: 100px;
       margin-top: 31px;
       margin-left: 13px;
       margin-right: 13px;
     }
   </style>
   <script>
-    window.onload = ()=>{
+    window.onload = () => {
+      incrementLocalStorageByOne("BATHROOM_MAZE")
       blurbFromNetwork();
+      wireUpExits();
+      grabImages();
+      grabAudio();
+    }
+
+    const grabAudio = async () => {
+      let tmp = await getAudio(".");
+      if (tmp.length > 0) {
+        const parent = document.querySelector("#audio-container");
+
+        const audio_icon = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>';
+        const icon = createElementWithClassAndParent("div", parent, "audio-icon");
+        icon.innerHTML = audio_icon;
+        let index = 0;
+        const audio = new Audio(tmp[index]);
+        const blurb = document.querySelector("#blurb");
+
+        parent.onclick = () => {
+          const file = tmp[index % tmp.length]
+          audio.src = file;
+          audio.play();
+          const old_blurb = blurb.innerText;
+          blurb.innerText = decodeURI(file).replace(".wav","").substring(1);
+          const restoreBlurb = () => {
+            blurb.innerText = old_blurb;
+            audio.removeEventListener("ended", restoreBlurb);
+
+          }
+
+          audio.addEventListener("ended", restoreBlurb);
+
+          index++;
+        }
+
+      }
+
+      //plays whatever it finds in order, one per button click
+
+    }
+
+    //render these in random but 'valid' locations. 
+    //first should ALWAYS be on the toilet tho
+    const grabImages = async () => {
+      let tmp = await getImages(".");
+      const parent = document.querySelector("#room-container");
+
+      //left,top
+      const validLocations = [[0, 101, 1], [96, 72, 1], [166, 52, 1], [103, 113, 10], [181, 110, 10], [31, 101, 1]];
+      const lobster_location = [295, 149, 1];
+      let index = 0;
+      for (let img of tmp) {
+        if (img !== "full_bathroom.png") {
+          const img_ele = createElementWithClassAndParent("img", parent, "sprite");
+          img_ele.src = img;
+          loc = lobster_location;
+          if (img !== "defensive_lobster.png") {
+            loc = validLocations[index % validLocations.length];
+          } else {
+            img_ele.className = "lobster";
+          }
+          img_ele.style.left = loc[0] + "px";
+          img_ele.style.top = loc[1] + "px"
+          img_ele.style.zIndex = loc[2];
+          index++;
+        }
+      }
+    }
+
+    const wireUpExits = async () => {
+      const blurb = document.querySelector("#blurb");
+
+      const directions = await getDirections();
+      const selection = document.querySelector("#door-selection");
+      selection.innerHTML = `<option value="" disabled selected>Can You Leave?</option>`;
+      for (let direction of Object.keys(directions)) {
+        if (directions[direction]) {
+          const option = createElementWithClassAndParent("option", selection);
+          option.innerText = "🚪 " + direction;
+          if (directions[direction].includes("<html>")) {
+            option.value = "GOTO: " + direction;
+          } else {
+            option.value = directions[direction];
+          }
+        }
+      }
+
+      selection.onchange = () => {
+        if (selection.value.includes("GOTO:")) {
+          window.location.href = selection.value.split("GOTO:")[1] + "/bathroom"
+        } else {
+          blurb.innerHTML = selection.value.replaceAll(/\n/g, "<br><br>");
+        }
+      }
+
     }
 
     const blurbFromNetwork = async () => {
@@ -39,8 +201,44 @@
       const rawText = await httpGetAsync(url);
       const blurb = document.querySelector("#blurb");
       if (blurb) {
-        blurb.innerText = rawText;
+        blurb.innerHTML = "<p>1 Candy Acquired!</p><hr><br>" + rawText.replaceAll(/\n/g, "<br><br>");
       }
+    }
+
+
+    //NOTE this may mess up if there is an index.html file. besides, having one would prevent ppl digging into secrets. can't have that.
+    /*
+      east: undefined
+      north: "<!DOCTYPE HTML PUBLIC "
+      south: "this wasn't a real direction dingus"
+    */
+    const getDirections = async () => {
+      let NORTH, SOUTH, EAST;
+      try {
+        let url = 'NORTH'
+        NORTH = await httpGetAsync(url);
+      } catch (e) {
+        //it wasn't there, no worries
+      }
+
+      try {
+        url = 'SOUTH'
+        SOUTH = await httpGetAsync(url);
+      } catch (e) {
+
+      }
+
+      try {
+        url = 'EAST'
+        EAST = await httpGetAsync(url);
+      } catch (e) {
+
+      }
+
+      return { NORTH, SOUTH, EAST };
+
+
+
     }
   </script>
 
@@ -49,8 +247,20 @@
 
 <body>
   <div id="container">
-    <img class="bathroom" src="full_bathroom.png">
-    <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
+    <div id="header">
+      <select id="door-selection">
+        <option>🚪 NO EXITS FOUND</option>
+      </select>
+      <div id="audio-container">
+
+      </div>
+    </div>
+    <div id="room-container">
+      <img class="bathroom" src="full_bathroom.png">
+      <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
+
+    </div>
+
   </div>
 </body>
 
