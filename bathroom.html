@@ -122,7 +122,7 @@
           audio.src = file;
           audio.play();
           const old_blurb = blurb.innerText;
-          blurb.innerText = file;
+          blurb.innerText = decodeURI(file).replace(".wav","").substring(1);
           const restoreBlurb = () => {
             blurb.innerText = old_blurb;
             audio.removeEventListener("ended", restoreBlurb);
