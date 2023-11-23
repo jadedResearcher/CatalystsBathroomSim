@@ -187,11 +187,11 @@ const trimToLengthReverse = (string, length) => {
 }
 
 const incrementLocalStorageByOne = (KEY)=>{
-  console.log("J RNOTE: incrementing", key)
   let current = localStorage.getItem(KEY);
   if(!current){
     current = 0;
   }
+  console.log("JR NOTE:", KEY, " was " +current)
 
   localStorage.setItem(KEY,parseInt(current)+1)
 
@@ -218,7 +218,8 @@ const updateURLParams = (params) => {
 
 //key, value status
 const cachedImages = {}
-
+//key, value status
+const cachedAudio = {}
 
 const imageExtendsions = [
   "png",
@@ -229,6 +230,13 @@ const imageExtendsions = [
 const filePattern = new RegExp('<a href="([^?]*?)">', 'g');
 
 const extensionPattern = new RegExp(`\\\.(${imageExtendsions.join("|")})\$`);
+
+const audioExtensions = [
+  "wav",
+];
+const filePatternAudio = new RegExp('<a href="([^?]*?)">', 'g');
+
+const extensionPatternAudio = new RegExp(`\\\.(${audioExtensions.join("|")})\$`);
 
 function getTimeString(date) {
   var h = date.getHours();
@@ -257,6 +265,37 @@ const addImageProcess =(src)=>{
   })
 }
 
+const getAudio = async(url)=>{
+  if (cachedAudio[url]) {
+    return cachedAudio[url];
+  }
+
+  let promise = new Promise(async (resolve, reject) => {
+    try {
+      const rawText = await httpGetAsync(url);
+
+      let files = [];
+      const match = rawText.matchAll(filePatternAudio);
+      const matches = Array.from(match, (res) => res);
+      for (let m of matches) {
+        const item = m[1];
+        if (item.match(extensionPatternAudio)) {
+          files.push(item);
+        }
+      }
+      cachedAudio[url] = files;
+      //console.log("JR NOTE: returned from network for", url)
+      resolve(files);
+    } catch (e) {
+      console.log("JR NOTE: error", e)
+      reject();
+      return [];
+    }
+  })
+  cachedAudio[url] = promise;
+  return promise;
+}
+
 //returns a promise which resolves with the content, prevents network spam
 const getImages = async (url) => {
   if (cachedImages[url]) {
@@ -277,7 +316,7 @@ const getImages = async (url) => {
         }
       }
       cachedImages[url] = files;
-      console.log("JR NOTE: returned from network for", url)
+      //console.log("JR NOTE: returned from network for", url)
       resolve(files);
     } catch (e) {
       console.log("JR NOTE: error", e)
