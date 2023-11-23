@@ -50,6 +50,18 @@
       margin-bottom: 25px;
       border-radius: 5px;
       border-left: 5px solid black;
+      position: relative;
+    }
+
+    #room-container .sprite {
+      position: absolute;
+      top: 0px;
+      transform: scaleX(-1);
+    }
+
+    #room-container .lobster {
+      position: absolute;
+      top: 0px;
     }
 
     #blurb {
@@ -63,13 +75,35 @@
     window.onload = () => {
       blurbFromNetwork();
       wireUpExits();
+      grabImages();
     }
 
     //render these in random but 'valid' locations. 
     //first should ALWAYS be on the toilet tho
-    const grabImages  = async()=>{
+    const grabImages = async () => {
       let tmp = await getImages(".");
-      console.log("JR NOTE: ",tmp)
+      const parent = document.querySelector("#room-container");
+
+      //left,top
+      const validLocations = [[0, 101,1], [96, 72,1], [166, 52,1], [103, 113,10], [181, 110,10],[31, 101,1]];
+      const lobster_location = [295, 149,1];
+      let index = 0;
+      for (let img of tmp) {
+        if (img !== "full_bathroom.png") {
+          const img_ele = createElementWithClassAndParent("img", parent, "sprite");
+          img_ele.src = img;
+          loc = lobster_location;
+          if (img !== "defensive_lobster.png") {
+             loc = validLocations[index % validLocations.length];
+          }else{
+            img_ele.className="lobster";
+          }
+          img_ele.style.left = loc[0] + "px";
+          img_ele.style.top = loc[1] + "px"
+          img_ele.style.zIndex=loc[2];
+          index++;
+        }
+      }
     }
 
     const wireUpExits = async () => {
@@ -82,19 +116,19 @@
         if (directions[direction]) {
           const option = createElementWithClassAndParent("option", selection);
           option.innerText = "🚪 " + direction;
-          if(directions[direction].includes("<html>")){
-            option.value = "GOTO: " +direction;
-          }else{
-            option.value=directions[direction];
+          if (directions[direction].includes("<html>")) {
+            option.value = "GOTO: " + direction;
+          } else {
+            option.value = directions[direction];
           }
         }
       }
 
-      selection.onchange = ()=>{
-        if(selection.value.includes("GOTO:")){
-          window.location.href=selection.value.split("GOTO:")[1]+"/bathroom"
-        }else{
-          blurb.innerHTML = selection.value.replaceAll(/\n/g,"<br><br>");
+      selection.onchange = () => {
+        if (selection.value.includes("GOTO:")) {
+          window.location.href = selection.value.split("GOTO:")[1] + "/bathroom"
+        } else {
+          blurb.innerHTML = selection.value.replaceAll(/\n/g, "<br><br>");
         }
       }
 
@@ -105,7 +139,7 @@
       const rawText = await httpGetAsync(url);
       const blurb = document.querySelector("#blurb");
       if (blurb) {
-        blurb.innerHTML = rawText.replaceAll(/\n/g,"<br><br>");
+        blurb.innerHTML = rawText.replaceAll(/\n/g, "<br><br>");
       }
     }
 
