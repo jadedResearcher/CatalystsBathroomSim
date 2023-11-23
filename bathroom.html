@@ -9,17 +9,46 @@
   <script src="utils.js"></script>
   <style>
     body {
-      background: black;
+      background: #2a2b31;
       font-family: 'Courier New', Courier, monospace;
       color: #c4c4c4;
     }
 
+    select{
+      background-color: #141619;
+      color: #7b818a;
+      border: none;
+      outline: none;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    option:hover{
+      background-color: #303035;
+      box-shadow: 0 0 10px 100px #303035 inset;
+    }
+
+    option:checked{
+      background-color: #303035;
+      box-shadow: 0 0 10px 100px #303035 inset;
+    }
+
     #container {
-      background-color: #2c2d31;
       width: 507px;
       height: fit-content;
       margin-left: auto;
       margin-right: auto;
+      padding: 25px;
+    }
+
+    #room-container {
+      background-color: #23252a;
+      width: 507px;
+      height: fit-content;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 5px;
+      border-left: 5px solid black;
     }
 
     #blurb {
@@ -30,8 +59,21 @@
     }
   </style>
   <script>
-    window.onload = ()=>{
+    window.onload =  () => {
       blurbFromNetwork();
+      wireUpExits();
+    }
+
+    const wireUpExits = async()=>{
+      const directions = await getDirections();
+      const selection = document.querySelector("#door-selection");
+      selection.innerHTML = "";
+      for(let direction of Object.keys(directions)){
+        const option = createElementWithClassAndParent("option",selection);
+        option.innerText = "🚪 " + direction;
+        option.value = direction;
+      }
+
     }
 
     const blurbFromNetwork = async () => {
@@ -42,6 +84,42 @@
         blurb.innerText = rawText;
       }
     }
+
+
+    //NOTE this may mess up if there is an index.html file. besides, having one would prevent ppl digging into secrets. can't have that.
+    /*
+      east: undefined
+      north: "<!DOCTYPE HTML PUBLIC "
+      south: "this wasn't a real direction dingus"
+    */
+    const getDirections = async () => {
+      let NORTH, SOUTH, EAST;
+      try {
+        let url = 'NORTH'
+        NORTH = await httpGetAsync(url);
+      } catch (e) {
+        //it wasn't there, no worries
+      }
+
+      try {
+        url = 'SOUTH'
+        SOUTH = await httpGetAsync(url);
+      } catch (e) {
+
+      }
+
+      try {
+        url = 'EAST'
+        EAST = await httpGetAsync(url);
+      } catch (e) {
+
+      }
+
+      return { NORTH, SOUTH, EAST };
+
+
+
+    }
   </script>
 
 </head>
@@ -49,8 +127,14 @@
 
 <body>
   <div id="container">
-    <img class="bathroom" src="full_bathroom.png">
-    <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
+    <div id="room-container">
+      <img class="bathroom" src="full_bathroom.png">
+      <div id="blurb">ERROR LOADING BLURB FILE, ARE YOU SURE YOU'RE ON A SERVER?</div>
+
+    </div>
+    <select id="door-selection">
+      <option>🚪 NO EXITS FOUND</option>
+    </select>
   </div>
 </body>
 
