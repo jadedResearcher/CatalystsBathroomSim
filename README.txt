@@ -2,6 +2,8 @@ IMPORTANT: if you want to make a new room, copy the bathroom.html, utils.js and 
 
 You want to put custom text into blurb.txt
 
+And ramble.txt will put things into the javascript console.
+
 If you have directories (or files) named NORTH, SOUTH, or EAST it will render them as potential exits. 
 If they are files, they will SEEM like an exit, but if selected it will render the files text instead.
 
