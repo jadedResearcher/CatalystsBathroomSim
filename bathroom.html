@@ -100,6 +100,7 @@
     window.onload = () => {
       incrementLocalStorageByOne("BATHROOM_MAZE")
       blurbFromNetwork();
+      rambleFromNetwork();
       wireUpExits();
       grabImages();
       grabAudio();
@@ -202,6 +203,15 @@
       const blurb = document.querySelector("#blurb");
       if (blurb) {
         blurb.innerHTML = "<p>1 Candy Acquired!</p><hr><br>" + rawText.replaceAll(/\n/g, "<br><br>");
+      }
+    }
+
+    const rambleFromNetwork = async () => {
+      const url = 'ramble.txt'
+      const rawText = await httpGetAsync(url);
+     
+      if (rawText) {
+        console.log(`%c${rawText}`, "font-family: 'Courier New'; font-size: 13px;");
       }
     }
 
