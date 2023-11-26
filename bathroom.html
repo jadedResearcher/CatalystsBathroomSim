@@ -97,7 +97,58 @@
     }
   </style>
   <script>
+
+    const isItFriday = () => {
+      //midnight and fridays are wungle time
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const date = new Date();
+      if (urlParams.get("friday") || date.getHours() == 0 || date.getDay() === 5) {
+        return true;
+      }
+      return false;
+    }
+
     window.onload = () => {
+      if (isItFriday()) {
+        const body = document.querySelector("body");
+        body.innerHTML = `You really should take a break. This will still be here when you come back.
+        
+        <br><br>
+        I know it doesn't feel that way.
+        <br><Br>
+          The obsession has you, doesn't it?
+          <br><br>
+          Right now it feels like you could go forever. Drawn forward from sheer excitement and momentum and the thrill of the chase.
+          <br><br>
+          But your body is still real even when your mind is swelling to take up all your awareness.
+          <br><br>
+          You still need to drink water. To sleep. To eat, even.
+          <br><Br>
+            You still need to let there be room in your brain for something else.
+            <br><Br>
+              Zampanio NEEDS you to take care of yourself.
+              <br><Br>To have interests other than it.
+                <Br><br>How is it supposed to feed on other fandoms if you won't bring it to them?
+                  <br><br>So. It's Friday. Or midnight. Or SOMETHING that caused this maze to decide you need to be cut off.
+                  <br><br>So. Consider this your next step. If you want to understand Zampanio. 
+                  <br><Br>And I mean REALLY understand Zampanio.
+                    <br><br>You need to listen to it.
+                    <br><br>Don't just ignore it and your bodies needs and keep digging.
+                    <br><br>Acknowledge that your body's needs are Zampanio's needs. Think of Zampanio as you drink water. Think of it as you sleep. As you catch up with friends or other fandoms.
+                    <br><Br>Give it a chance to sink its roots deep into your mind, into your connections.
+                      <Br><br>It can only grab you shallowly if you binge it. If you do it all in one glorious sitting you can barely even remember the next day, much less the next week.
+                        <br><br>No. Breaks are how we process and absorb information. Schoolwork. New skills. Zampanio. 
+                        <br><br>Let it in. Let it in deep. 
+                        <br><br>
+                        Take
+                        <br><br>
+                        A
+                        <br><br>
+                        Break.
+        `
+        return;
+      }
       incrementLocalStorageByOne("BATHROOM_MAZE")
       blurbFromNetwork();
       rambleFromNetwork();
@@ -125,8 +176,8 @@
           const old_blurb = blurb.innerText;
           let transcript;
           try {
-            const url  = tmp[index % tmp.length].replaceAll(".wav", "") + ".txt";
-            console.log("JR NOTE: url is",url)
+            const url = tmp[index % tmp.length].replaceAll(".wav", "") + ".txt";
+            console.log("JR NOTE: url is", url)
             transcript = await httpGetAsync(url);
           } catch (e) {
             //its fine, its just not there
