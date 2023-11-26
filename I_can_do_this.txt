@@ -1,0 +1,9 @@
+aaaahhh...okay. okay okay okay okay, i think i know what's going on.
+i need to sometimes have separate transcript files because the AI program only generates the first x characters as an automatic transcripted file name...
+it'll hafta be optional though, because the files i already have don't have separate transcripts.
+okay
+i can do this
+
+
+
+

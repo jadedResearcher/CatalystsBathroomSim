@@ -118,12 +118,23 @@
         const audio = new Audio(tmp[index]);
         const blurb = document.querySelector("#blurb");
 
-        parent.onclick = () => {
+        parent.onclick = async () => {
           const file = tmp[index % tmp.length]
           audio.src = file;
           audio.play();
           const old_blurb = blurb.innerText;
-          blurb.innerText = decodeURI(file).replace(".wav","").substring(1);
+          let transcript;
+          try {
+            const url  = tmp[index % tmp.length].replaceAll(".wav", "") + ".txt";
+            console.log("JR NOTE: url is",url)
+            transcript = await httpGetAsync(url);
+          } catch (e) {
+            //its fine, its just not there
+            transcript = decodeURI(file).replace(".wav", "").substring(1);
+          }
+
+
+          blurb.innerText = transcript;
           const restoreBlurb = () => {
             blurb.innerText = old_blurb;
             audio.removeEventListener("ended", restoreBlurb);
@@ -209,7 +220,7 @@
     const rambleFromNetwork = async () => {
       const url = 'ramble.txt'
       const rawText = await httpGetAsync(url);
-     
+
       if (rawText) {
         console.log(`%c${rawText}`, "font-family: 'Courier New'; font-size: 13px;");
       }
