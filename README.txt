@@ -11,6 +11,8 @@ If you include any pngs BESIDES full_bathroom.png it will attempt to render it i
 
 If you include any wav files it will add a button to play them in order (the file name should be the transcript of the file plus ordering number in the front (it'll get removed).
 
+If that would be too long you can include a filename.txt file as well (no ordering number)
+
 Because this is a file system maze, you can do file system fuckery (like symbolic links).
 
 

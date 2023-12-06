@@ -2,16 +2,6 @@ let ele;
 
 let how_long_well_let_them_explore = 500;
 
-const isItFriday = ()=>{
-  //midnight and fridays are wungle time
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const date = new Date();
-  if (urlParams.get("friday") || date.getHours() == 0 || date.getDay() === 5) {
-    return true;
-  }
-  return false;
-}
 
 
 //from view-source:https://www.yyyyyyy.info/
