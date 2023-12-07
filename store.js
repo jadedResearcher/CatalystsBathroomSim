@@ -146,13 +146,7 @@ const initHelpDesk = () => {
   chatContainer.style.display = "none";
 
 
-  button.onclick = () => {
-    if (chatContainer.style.display === "none") {
-      chatContainer.style.display = "block"
-    } else {
-      chatContainer.style.display = "none"
-    }
-  }
+
 
   const chatHeader = createElementWithClassAndParent("div", chatContainer, 'chat-header');
   const line1 = createElementWithClassAndParent("p", chatHeader);
@@ -171,12 +165,68 @@ const initHelpDesk = () => {
   }
 
   const chatBody = createElementWithClassAndParent("div", chatContainer, 'chat-body');
+  //oh hey, if you've found these secrets, maybe you can help people less comfortable with code find them?
+  //leave them hints in places
+  //maybe screenshots in the wiki of words inside the help desk (since most people assume you can only put numbers in)
+  //to make them realize how to proceed even if they aren't sufficiently wasted
+  //in essence: would you like to make your own branch of zampanio?
+  //its hard weaving puzzles into things, (either hints are too easy or too hard) which is why we should all practice while having fun
+  const initial_directory = { "operator": new CustomerSupportSpecialist("Quotidian Quorum InfoBroker System", "quick start", QQ()), 1152: new CustomerSupportSpecialist("Justified Recursion", "1152", JRK()), "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()), "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()), 0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()), "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()), "1": new CustomerSupportSpecialist("Not Found", "1", Lost()), 13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()), 4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()) };
 
 
+  let synced = false;
+
+  button.onclick = () => {
+    if (chatContainer.style.display === "none") {
+      if(!synced){
+        syncChatBodyToSpecialist(chatBody, initial_directory["0"], initial_directory);
+        synced = true;
+      }
+      chatContainer.style.display = "block";
+    } else {
+      chatContainer.style.display = "none"
+    }
+  }
+}
+
+
+const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
+  console.log("JR NOTE: specialist is", specialist)
+  const parts = specialist.ramble.text.split("\n");
+  let next_specialist = specialist; //JR NOTE: TODO need to generate the next specialist here
+
+  //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
+  for(let part of parts){
+    await sleep(1000*getRandomNumberBetween(1,5));
+    renderOneLine(chatBody,specialist,next_specialist,part);
+  }
 
 
 }
 
+const renderOneLine = (chatBody,specialist,next_specialist,part)=>{
+  if(part.trim()===""){
+    return;
+  }
+
+  const processScriptingTags = (input)=>{
+    let tmp = input.replaceAll(CURRENT_NAME,specialist.name);
+    tmp = tmp.replaceAll(NEXT_TITLE,next_specialist.title);
+    tmp = tmp.replaceAll(CURRENT_TITLE,specialist.title);
+    tmp = tmp.replaceAll(NEXT_EXTENSION,`${next_specialist.extension}`);
+    tmp = tmp.replaceAll(CURRENT_EXTENSION,`${specialist.extension}`);
+    return tmp;
+}
+  const chatLine = createElementWithClassAndParent("div", chatBody, 'chat-line');
+
+  const chatIcon = createElementWithClassAndParent("div", chatLine, 'chat-icon');
+  chatIcon.innerText = specialist.initials;
+
+  const chatText = createElementWithClassAndParent("div", chatLine, 'chat-text');
+  chatText.innerText = processScriptingTags(part);
+
+
+}
 
 
 
@@ -340,24 +390,24 @@ const Lost = () => {
 
 const TheCloser = () => {
   const defaultRamble = `Hello, Wodin.
-    I’m sure you are alarmed that I am contacting you like this; very sudden, I know. However, please, do not worry. I assure you that everything is under control.
-     How are you, by the way? Not fantastic, I assume. I believe you don’t need to be told that I’ve been monitoring your chat, but I offer it for the sake of transparency.
-     I would like to apologize for the experience you’ve had, and any feelings that may have surfaced because of it.
+    I'm sure you are alarmed that I am contacting you like this; very sudden, I know. However, please, do not worry. I assure you that everything is under control.
+     How are you, by the way? Not fantastic, I assume. I believe you don't need to be told that I've been monitoring your chat, but I offer it for the sake of transparency.
+     I would like to apologize for the experience you've had, and any feelings that may have surfaced because of it.
      My job, and the service I provide for you, is simple: I am here to make sure your complaint gets heard, Wodin. You may call me the Closer, if you like. It is certainly easier to say than my full title. 
-     As for what you’re here for: You'd like to find…
+     As for what you're here for: You'd like to find…
      Excuse me, a killer? Contracted by our company?
-     Oh, my. Well, that can’t stand at all. We at Eyedol Games would never stand for these sorts of misdemeanors affecting our treasured relationship with our clients, and I can see how one could confuse a mere uncouth fan with an employee, especially with their…
+     Oh, my. Well, that can't stand at all. We at Eyedol Games would never stand for these sorts of misdemeanors affecting our treasured relationship with our clients, and I can see how one could confuse a mere uncouth fan with an employee, especially with their…
      ...strange efficiency, on the matter.
-     Nevermind that. I’d be more than happy to look into it for you.
-     I’ll need some starting information, though. Could you provide me with a name? A first and last name is ideal, we just started transferring our physical databases onto the World Wide Web, or ‘the Cloud’, as they have been calling it. The technicalities of it escape me, I’m afraid.
-      Any physical characteristics would do as well, of course-- although, I must say I can only take photographs on this one. I cannot bring myself to fire some unlucky fellow because of someone else’s crime, would you? It does not seem very fair. 
+     Nevermind that. I'd be more than happy to look into it for you.
+     I'll need some starting information, though. Could you provide me with a name? A first and last name is ideal, we just started transferring our physical databases onto the World Wide Web, or ‘the Cloud', as they have been calling it. The technicalities of it escape me, I'm afraid.
+      Any physical characteristics would do as well, of course-- although, I must say I can only take photographs on this one. I cannot bring myself to fire some unlucky fellow because of someone else's crime, would you? It does not seem very fair. 
       I would then have to look through the old documents, but anything to please a client, of course.
       ...…ah. You do not happen to possess any of those, do you, Wodin?
-      A shame. I’m afraid there’s not much I can do for you without them. We cannot take someone to trial without evidence, and, as you’d understand, much less fire them. 
+      A shame. I'm afraid there's not much I can do for you without them. We cannot take someone to trial without evidence, and, as you'd understand, much less fire them. 
       Labor laws mean that we cannot always do what is most efficient, after all. Such are the trappings of modern legislature.
-      This leaves us at an impasse. I’m afraid that if you publish these accusations without evidence, our lawyers might be inclined to sue for libel. 
-      I know it sounds like a threat, but I’d like to assure you that it’s not. I’d argue it’s more of a headache for me than you.
-      If such a thing were to happen, I’d be happy and willing to use my position to retract the charges, all for such a valued client. But I do not envy the paperwork.
+      This leaves us at an impasse. I'm afraid that if you publish these accusations without evidence, our lawyers might be inclined to sue for libel. 
+      I know it sounds like a threat, but I'd like to assure you that it's not. I'd argue it's more of a headache for me than you.
+      If such a thing were to happen, I'd be happy and willing to use my position to retract the charges, all for such a valued client. But I do not envy the paperwork.
       So, perhaps we can reach an understanding, Wodin.
       If you happen to come across any identifiable features of this Killer, let me know, and I will cross reference with our available documents. If I find anything that seems like a match, the employee will be terminated immediately, and then we can see the case together in court. That way we can reach an amicable solution that benefits all parties.
       And, of course, shed light on one of the most infamous serial killers of the decade. All with your help.
@@ -368,7 +418,7 @@ const TheCloser = () => {
 }
 
 const CloseButStillTooFar = () => {
-  const initialRamble = pickFrom(pickFrom([ficlets, boi_storage, hunt_ficlets]));
+  const initialRamble = "JR here... uh. I'm not sure what to put here, tbh. There was little ficlets in ZampanioSimEast. If this is still empty once this is live, maybe remind me to put something here? Or. Maybe not. It'll be hard for me to find here to try.";
   const ramble = new CustomerServiceRamble(initialRamble, []);
   return ramble;
 }
@@ -524,7 +574,7 @@ const ReturnToQueue = () => {
 
 
 const HelloWorld = () => {
-  const defaultRamble = `Hi there! My name is ${CURRENT_NAME}. You can begin by asking your question below! Someone will be with you shortly. Due to call volume, Restricted Text Only Mode has been initiated. Thank you for your patience!`;
+  const defaultRamble = `Hi there! My name is ${CURRENT_NAME}. You can begin by asking your question below! Someone will be with you shortly. Due to call volume, Restricted Text Only Mode has been initiated. Thank you for your patience! \n Please select an option below!`;
 
   const ramble = new CustomerServiceRamble(defaultRamble, []);
 
@@ -552,10 +602,3 @@ const randomSpecialist = (frustration_level) => {
   const name = `${pickFrom(first_names)} ${pickFrom(last_names)} `;
   return new CustomerSupportSpecialist(name, `${getRandomNumberBetween(2, 999)}`, GenericSupport(frustration_level));
 }
-//oh hey, if you've found these secrets, maybe you can help people less comfortable with code find them?
-//leave them hints in places
-//maybe screenshots in the wiki of words inside the help desk (since most people assume you can only put numbers in)
-//to make them realize how to proceed even if they aren't sufficiently wasted
-//in essence: would you like to make your own branch of zampanio?
-//its hard weaving puzzles into things, (either hints are too easy or too hard) which is why we should all practice while having fun
-const initial_directory = { "operator": new CustomerSupportSpecialist("Quotidian Quorum InfoBroker System", "quick start", QQ()), 1152: new CustomerSupportSpecialist("Justified Recursion", "1152", JRK()), "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()), "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()), 0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()), "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()), "1": new CustomerSupportSpecialist("Not Found", "1", Lost()), 13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()), 4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()) };
