@@ -192,6 +192,7 @@ const initHelpDesk = () => {
 
 const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
   console.log("JR NOTE: specialist is", specialist)
+  const audio  = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
   const parts = specialist.ramble.text.split("\n");
   let next_specialist = specialist; //JR NOTE: TODO need to generate the next specialist here
 
@@ -199,6 +200,7 @@ const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
   for(let part of parts){
     await sleep(1000*getRandomNumberBetween(1,5));
     renderOneLine(chatBody,specialist,next_specialist,part);
+    audio.play();
   }
 
 
