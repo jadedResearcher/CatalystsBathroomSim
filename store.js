@@ -180,7 +180,7 @@ const initHelpDesk = () => {
   button.onclick = () => {
     if (chatContainer.style.display === "none") {
       if(!synced){
-        syncChatBodyToSpecialist(chatBody, initial_directory["0"], initial_directory);
+        syncChatBodyToRamble(chatBody, initial_directory["0"].ramble,initial_directory["0"], initial_directory);
         synced = true;
       }
       chatContainer.style.display = "block";
@@ -191,12 +191,13 @@ const initHelpDesk = () => {
 }
 
 
-const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
+const syncChatBodyToRamble = async (chatBody,ramble, specialist, directory) => {
+  chatBody.innerHTML = "";
   console.log("JR NOTE: specialist is", specialist,specialist.ramble.potential_reponses)
   const hell = createElementWithClassAndParent("div", chatBody, 'customer-service-hell');
 
   const audio  = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
-  const parts = specialist.ramble.text.split("\n");
+  const parts = ramble.text.split("\n");
   let next_specialist = specialist; //JR NOTE: TODO need to generate the next specialist here
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
@@ -208,12 +209,14 @@ const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
 
   const optionsEle = createElementWithClassAndParent("div", chatBody, 'chat-options');
 
-  for(let option of specialist.ramble.potential_reponses){
+  for(let option of ramble.potential_reponses){
     const optionEle = createElementWithClassAndParent("div", optionsEle, 'chat-option');
     optionEle.innerText = option.text;
+    optionEle.onclick = ()=>{
+      syncChatBodyToRamble(chatBody, option.jr_response_function(), specialist, directory);
+    }
 
   }
-
 
 }
 
