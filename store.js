@@ -119,6 +119,7 @@ const sinfulInjectedCSS = `
       border: 1px solid #c4c4c4;
       padding: 10px;
       border-radius: 8px;
+      cursor: pointer;
     }
 
     .customer-service-hell{
@@ -191,7 +192,9 @@ const initHelpDesk = () => {
 
 
 const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
-  console.log("JR NOTE: specialist is", specialist)
+  console.log("JR NOTE: specialist is", specialist,specialist.ramble.potential_reponses)
+  const hell = createElementWithClassAndParent("div", chatBody, 'customer-service-hell');
+
   const audio  = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
   const parts = specialist.ramble.text.split("\n");
   let next_specialist = specialist; //JR NOTE: TODO need to generate the next specialist here
@@ -199,8 +202,16 @@ const syncChatBodyToSpecialist = async (chatBody,specialist, directory) => {
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
   for(let part of parts){
     await sleep(1000*getRandomNumberBetween(1,5));
-    renderOneLine(chatBody,specialist,next_specialist,part);
+    renderOneLine(hell,specialist,next_specialist,part);
     audio.play();
+  }
+
+  const optionsEle = createElementWithClassAndParent("div", chatBody, 'chat-options');
+
+  for(let option of specialist.ramble.potential_reponses){
+    const optionEle = createElementWithClassAndParent("div", optionsEle, 'chat-option');
+    optionEle.innerText = option.text;
+
   }
 
 
