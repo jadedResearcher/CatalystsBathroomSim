@@ -16,6 +16,8 @@ please enjoy this horrible giant god file
 //but it DOES let me have the styling for the help desk contained within a single file
 //which the bathroom sim in PARTICULAR prefers.
 //god help future me
+
+const initialTime = new Date();
 const sinfulInjectedCSS = `
   <style>
 
@@ -130,6 +132,9 @@ const sinfulInjectedCSS = `
   </style>
 `;
 
+let directory;
+let currentExtension = "0";//useful for knowing when i need to cancel typing
+
 const initHelpDesk = () => {
   const body = document.querySelector("body");
   const div = document.createElement("div");
@@ -156,14 +161,12 @@ const initHelpDesk = () => {
   line2.innerText = "If you know your party's extention, please type it here.";
   const line3 = createElementWithClassAndParent("p", chatHeader);
   const form = createElementWithClassAndParent("form", line3);
+
   const input = createElementWithClassAndParent("input", form);
   const form_button = createElementWithClassAndParent("button", form, "styled-button");
   form_button.innerText = "Go"
 
-  form.onSubmit = (e) => {
-    e.preventDefault();
-    alert("!!!");
-  }
+ 
 
   const chatBody = createElementWithClassAndParent("div", chatContainer, 'chat-body');
   //oh hey, if you've found these secrets, maybe you can help people less comfortable with code find them?
@@ -173,14 +176,24 @@ const initHelpDesk = () => {
   //in essence: would you like to make your own branch of zampanio?
   //its hard weaving puzzles into things, (either hints are too easy or too hard) which is why we should all practice while having fun
   const initial_directory = { "operator": new CustomerSupportSpecialist("Quotidian Quorum InfoBroker System", "quick start", QQ()), 1152: new CustomerSupportSpecialist("Justified Recursion", "1152", JRK()), "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()), "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()), 0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()), "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()), "1": new CustomerSupportSpecialist("Not Found", "1", Lost()), 13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()), 4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()) };
-
+  
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    if((input.value in initial_directory) ){
+      syncChatBodyToRamble(chatBody, initial_directory[input.value].ramble, initial_directory[input.value], initial_directory);
+      //setCurrentRamble(directory[extension].ramble);
+  }else{
+    syncChatBodyToRamble(chatBody, initial_directory["1"].ramble, initial_directory["1"], initial_directory);
+    //setCurrentRamble(directory[1].ramble);
+  }
+  }
 
   let synced = false;
 
   button.onclick = () => {
     if (chatContainer.style.display === "none") {
-      if(!synced){
-        syncChatBodyToRamble(chatBody, initial_directory["0"].ramble,initial_directory["0"], initial_directory);
+      if (!synced) {
+        syncChatBodyToRamble(chatBody, initial_directory["0"].ramble, initial_directory["0"], initial_directory);
         synced = true;
       }
       chatContainer.style.display = "block";
@@ -191,28 +204,42 @@ const initHelpDesk = () => {
 }
 
 
-const syncChatBodyToRamble = async (chatBody,ramble, specialist, directory) => {
+const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => {
   chatBody.innerHTML = "";
-  console.log("JR NOTE: specialist is", specialist,specialist.ramble.potential_reponses)
+  currentExtension = specialist.extension;
+  const time = (Date.now() - (initialTime));
+
+  let next_specialist = randomSpecialist(Math.round(time / 1000 / 60));
+  if (!(next_specialist.extension in directory)) {
+    directory[next_specialist.extension] = next_specialist;
+  }else{
+    next_specialist = directory[next_specialist.extension]; //don't use the one we generated, use the one we already have
+  }
+
   const hell = createElementWithClassAndParent("div", chatBody, 'customer-service-hell');
 
-  const audio  = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
+  const audio = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
   const parts = ramble.text.split("\n");
-  let next_specialist = specialist; //JR NOTE: TODO need to generate the next specialist here
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
-  for(let part of parts){
-    await sleep(1000*getRandomNumberBetween(1,5));
-    renderOneLine(hell,specialist,next_specialist,part);
+  for (let part of parts) {
+    await sleep(1000 * getRandomNumberBetween(1, 5));
+    if(currentExtension != specialist.extension){
+      return;
+    }
+    renderOneLine(hell, specialist, next_specialist, part);
     audio.play();
   }
 
   const optionsEle = createElementWithClassAndParent("div", chatBody, 'chat-options');
 
-  for(let option of ramble.potential_reponses){
+  for (let option of ramble.potential_reponses) {
+    if(currentExtension != specialist.extension){
+      return;
+    }
     const optionEle = createElementWithClassAndParent("div", optionsEle, 'chat-option');
     optionEle.innerText = option.text;
-    optionEle.onclick = ()=>{
+    optionEle.onclick = () => {
       syncChatBodyToRamble(chatBody, option.jr_response_function(), specialist, directory);
     }
 
@@ -220,19 +247,19 @@ const syncChatBodyToRamble = async (chatBody,ramble, specialist, directory) => {
 
 }
 
-const renderOneLine = (chatBody,specialist,next_specialist,part)=>{
-  if(part.trim()===""){
+const renderOneLine = (chatBody, specialist, next_specialist, part) => {
+  if (part.trim() === "") {
     return;
   }
 
-  const processScriptingTags = (input)=>{
-    let tmp = input.replaceAll(CURRENT_NAME,specialist.name);
-    tmp = tmp.replaceAll(NEXT_TITLE,next_specialist.title);
-    tmp = tmp.replaceAll(CURRENT_TITLE,specialist.title);
-    tmp = tmp.replaceAll(NEXT_EXTENSION,`${next_specialist.extension}`);
-    tmp = tmp.replaceAll(CURRENT_EXTENSION,`${specialist.extension}`);
+  const processScriptingTags = (input) => {
+    let tmp = input.replaceAll(CURRENT_NAME, specialist.name);
+    tmp = tmp.replaceAll(NEXT_TITLE, next_specialist.title);
+    tmp = tmp.replaceAll(CURRENT_TITLE, specialist.title);
+    tmp = tmp.replaceAll(NEXT_EXTENSION, `${next_specialist.extension}`);
+    tmp = tmp.replaceAll(CURRENT_EXTENSION, `${specialist.extension}`);
     return tmp;
-}
+  }
   const chatLine = createElementWithClassAndParent("div", chatBody, 'chat-line');
 
   const chatIcon = createElementWithClassAndParent("div", chatLine, 'chat-icon');

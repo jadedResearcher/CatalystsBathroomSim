@@ -112,6 +112,7 @@
     }
 
     window.onload = () => {
+      initHelpDesk();
       if (isItFriday()) {
         const body = document.querySelector("body");
         body.innerHTML = `You really should take a break. This will still be here when you come back.
