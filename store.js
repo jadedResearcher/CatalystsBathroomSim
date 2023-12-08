@@ -267,6 +267,8 @@ const renderOneLine = (chatBody, specialist, next_specialist, part) => {
 
   const chatText = createElementWithClassAndParent("div", chatLine, 'chat-text');
   chatText.innerText = processScriptingTags(part);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
 
 
 }
@@ -406,7 +408,7 @@ const JR = () => {
 }
 
 const JR2 = () => {
-  const initialRamble = "Oh right. Puzzles and shit.\nHonestly that's more for when we're still all agreeing to pretend its a game even tho its clearly not.\nTHIS is the branch where we force it to be a game even though we know its not and pretend thats good enough!!!\nThat the passive aggressive 'fuck you' the newly mutated game gives you is sufficient gameplay.\nANYWAYS I do think its important to help you out, though.\nSo.\nIf you find yourself wanting to regain access to an old friends blog.\nThe password might be THEIR old friend's user name.\nBut done in their quirk.";
+  const initialRamble = ":) :) :)\nis this your first time talking to me?\nwell, as much me as i can leave behind as an easter egg in a fake help desk\nwhoops\nspoilers\nanyways\nglad to meet you\nor see you again\nwhichever\ni hope you enjoy this maze :) :) :)\nthink i'll bring AB over\nso she can guide is all to the edges of things";
   const ramble = new CustomerServiceRamble(initialRamble, []);
 
   return ramble;
@@ -477,9 +479,9 @@ const GenericSupport = (frustration_level) => {
 
   //ten levels of frustration give you options.
   const responses = [
-    ["I would like to report a bug with Zampanio.", "I would like to request a Limited Edition Zampanio Community Edition Guide.", "I would like to claim my free gift.", "I would like to speak with an Operator."],
-    ["I'm trying to report a bug.", "I am trying to track down a Guide.", "I just want that free gift.", "Can I talk to an actual human?"],
-    ["I was trying to report that your game is buggy but I think your help desk is too.", "Can ANYONE tell me how to play Zampanio?", "I think you all might be glitchy chat bots."],
+    ["What actually is Zampanio?", "I'd like to spend my Gopher Gold, please.", "I think that Zampanio is dangerous.", "I think I might be lost."],
+    ["I'm lost.", "I am trying to track down a way to spend my Gopher Gold.", "I just want to buy things.", "Can I talk to an actual human?"],
+    ["I was trying to report that your game is buggy but I think your help desk is too.", "Can ANYONE tell me what is Zampanio?", "I think you all might be glitchy chat bots."],
     ["This is so pointless.", "No wonder the game doesn't work.", "Operator. Human. Get Help. Escalate. Are any of these working?"],
     ["Do you have any idea how long I've been waiting?", "Just send in the next person.", "How long is this going to last."],
     ["Why am I even still bothering?", "I'm pretty sure you're a bot."],
