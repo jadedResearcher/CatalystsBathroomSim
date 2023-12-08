@@ -69,6 +69,8 @@
       padding: 25px;
     }
 
+
+
     #room-container {
       background-color: #23252a;
       width: 507px;
@@ -105,6 +107,9 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const date = new Date();
+      if(urlParams.get("friday")==="plzjrwantsin"){
+        return false;
+      }
       if (urlParams.get("friday") || date.getHours() == 0 || date.getDay() === 5) {
         return true;
       }

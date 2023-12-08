@@ -129,6 +129,101 @@ const sinfulInjectedCSS = `
       overflow: auto;
     }
 
+    .closer-chat-container{
+      position: fixed;
+      right: 15%;
+      top: 15px;
+      margin-top: 65px;
+      height: 515px;
+      width: 1000px;
+      color: white;
+      text-decoration: none;
+      border-radius: 2px;
+      box-shadow: 2px 2px 2px 3px rgba(0, 0, 0, .4);
+    }
+
+    .closer-chat-header{
+      height: 50px;
+      color: white;
+      background-color: #b72a21;
+      font-size: 14px;
+      padding: 20px;
+      p{
+          margin-left: 15px;
+      }
+    }
+
+    .closer-chat-body{
+      color: #b72a21;
+        background-color: #f8fafa;
+        width: 100%;
+        height: 100%;
+        p{
+            margin-left: 15px;
+        }
+    }
+
+    .closer-chat-line{
+      padding: 5px;
+    }
+
+    .closer-chat-icon{
+      clip-path: circle(50% at 50% 50%);
+        -webkit-clip-path: circle(43% at 50% 50%);
+        display: inline-block;
+        background-color: #b72a21;
+        color: white;
+        padding: 15px;
+        font-size: 16px;
+        line-height: 10px;
+        vertical-align: top;
+    }
+
+    .closer-chat-option{
+      background: #b72a21;
+      font-size; 14px;
+      color: white;
+      display: inline-block;
+      width: 225px;
+      margin-left: 10px;
+      margin-bottom: 8px;
+      border: 1px solid #c4c4c4;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .closer-chat-text{
+      background: white;
+      font-size; 14px;
+      display: inline-block;
+      width: 800px;
+      margin-left: 10px;
+      border: 1px solid #c4c4c4;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .closer-customer-service-hell{
+      overflow: auto;
+      height: 465px;
+    }
+
+    .closer{
+      z-index: 1000;
+      left: 200px;
+      top: 113px !important;
+      animation: flipout 1s linear infinite;
+    }
+
+    @keyframes flipout{
+      0%,20%,40%,60%,80%,100%{
+        transform: translate(0px, 10px);
+      }
+      10%,30%,50%,70%,90%{
+        transform: translate(0px, 0px);
+      }
+    }
+
   </style>
 `;
 
@@ -437,32 +532,38 @@ const Lost = () => {
   return ramble;
 }
 
+const handleCloserPopup = ()=>{
+  window.alert("!!!");
+  /*
+Well, not one for conversation, hm?
+Straight to the point. I like that. It's an admirable trait in someone.
+But yes, you /can/ buy things here with Gopher Gold.
+I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it.
+  */
+
+/*
+  TODO: 
+  * render the closer from an absolute location into the room
+  * render closer pop up (css above)
+  * check the local directory store_inventory for files (wastes can get in there, its fine)
+  * if there is nothing in it, error handling (closer is warmly apologetic)
+  * if there is things in there (text, audio, images), sort alphabetically, each costs power of 2 (1,2,4,8,16, etc)
+  * if you have already purchased it before, little mark (you still WILL be charged for it, closer warns)
+  * if you purchase it, display it in some way (text or image in popup, audio playing in background) (can only play while in this bathroom, if you leave and come back will have to repurchase)
+  * in future lil mini games or things to do that give bonus gopher gold (like finding that picture room or ab)
+*/
+
+const container = document.querySelector("#room-container");
+const closerSprite = createElementWithClassAndParent("img", container,'sprite closer');
+closerSprite.src = "http://farragofiction.com/CatalystsBathroomSim/images/beast.png";
+container.append(closerSprite)
+}
+
 const TheCloser = () => {
-  const defaultRamble = `Hello, Wodin.
-    I'm sure you are alarmed that I am contacting you like this; very sudden, I know. However, please, do not worry. I assure you that everything is under control.
-     How are you, by the way? Not fantastic, I assume. I believe you don't need to be told that I've been monitoring your chat, but I offer it for the sake of transparency.
-     I would like to apologize for the experience you've had, and any feelings that may have surfaced because of it.
-     My job, and the service I provide for you, is simple: I am here to make sure your complaint gets heard, Wodin. You may call me the Closer, if you like. It is certainly easier to say than my full title. 
-     As for what you're here for: You'd like to find…
-     Excuse me, a killer? Contracted by our company?
-     Oh, my. Well, that can't stand at all. We at Eyedol Games would never stand for these sorts of misdemeanors affecting our treasured relationship with our clients, and I can see how one could confuse a mere uncouth fan with an employee, especially with their…
-     ...strange efficiency, on the matter.
-     Nevermind that. I'd be more than happy to look into it for you.
-     I'll need some starting information, though. Could you provide me with a name? A first and last name is ideal, we just started transferring our physical databases onto the World Wide Web, or ‘the Cloud', as they have been calling it. The technicalities of it escape me, I'm afraid.
-      Any physical characteristics would do as well, of course-- although, I must say I can only take photographs on this one. I cannot bring myself to fire some unlucky fellow because of someone else's crime, would you? It does not seem very fair. 
-      I would then have to look through the old documents, but anything to please a client, of course.
-      ...…ah. You do not happen to possess any of those, do you, Wodin?
-      A shame. I'm afraid there's not much I can do for you without them. We cannot take someone to trial without evidence, and, as you'd understand, much less fire them. 
-      Labor laws mean that we cannot always do what is most efficient, after all. Such are the trappings of modern legislature.
-      This leaves us at an impasse. I'm afraid that if you publish these accusations without evidence, our lawyers might be inclined to sue for libel. 
-      I know it sounds like a threat, but I'd like to assure you that it's not. I'd argue it's more of a headache for me than you.
-      If such a thing were to happen, I'd be happy and willing to use my position to retract the charges, all for such a valued client. But I do not envy the paperwork.
-      So, perhaps we can reach an understanding, Wodin.
-      If you happen to come across any identifiable features of this Killer, let me know, and I will cross reference with our available documents. If I find anything that seems like a match, the employee will be terminated immediately, and then we can see the case together in court. That way we can reach an amicable solution that benefits all parties.
-      And, of course, shed light on one of the most infamous serial killers of the decade. All with your help.
-      Well, if there is anything else I can do to help you, Wodin, feel free to let me know.
-      Thank you for calling Eyedol Games, and have a nice night.  `;
+  const defaultRamble = `One moment... `;
   const ramble = new CustomerServiceRamble(defaultRamble, []);
+  handleCloserPopup();
+
   return ramble;
 }
 
@@ -578,11 +679,13 @@ const CVQQIS = () => {
 }
 
 const PlayGame = () => {
-  const defaultRamble = "Our latest entry in the Zampanio (TM) Franchise can be played with either keyboard or mouse for your convinience!";
+  const defaultRamble = "You can't!\nAll paths, North, South and even East all lead back to the Bathroom.\nBut isn't the exploration it's own reward?";
   const ramble = new CustomerServiceRamble(defaultRamble, []);
   ramble.potential_reponses.push(new PlayerResponse("Oh.", AnythingElse));
   return ramble;
 }
+
+
 
 const AnythingElse = () => {
   const defaultRamble = "Is there anything else I can help you with?";
@@ -636,9 +739,11 @@ const HelloWorld = () => {
 
 
 
-  ramble.potential_reponses.push(new PlayerResponse("I would like to report a bug with Zampanio.", ReturnToQueue));
-  ramble.potential_reponses.push(new PlayerResponse("I would like to request a Limited Edition Zampanio Community Edition Guide.", ReturnToQueue));
-  ramble.potential_reponses.push(new PlayerResponse("How do you play this game?", PlayGame));
+  ramble.potential_reponses.push(new PlayerResponse("Hello? I can buy things here. Uh. With Gopher Gold? Or Candy?", TheCloser));
+
+  ramble.potential_reponses.push(new PlayerResponse("Could somebody explain what Zampanio is?", ReturnToQueue));
+  ramble.potential_reponses.push(new PlayerResponse("I think I found a bug.", ReturnToQueue));
+  ramble.potential_reponses.push(new PlayerResponse("How do I leave this bathroom?", PlayGame));
   ramble.potential_reponses.push(new PlayerResponse("I would like to speak with an Operator.", QQ));
 
 
