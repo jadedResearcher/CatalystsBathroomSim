@@ -189,15 +189,19 @@ const initHelpDesk = () => {
   }
 
   let synced = false;
+  const audio = new Audio("http://farragofiction.com/CatalystsBathroomSim/seeking_help.mp3");
+  audio.loop = true;
 
   button.onclick = () => {
     if (chatContainer.style.display === "none") {
+      audio.play();
       if (!synced) {
         syncChatBodyToRamble(chatBody, initial_directory["0"].ramble, initial_directory["0"], initial_directory);
         synced = true;
       }
       chatContainer.style.display = "block";
     } else {
+      audio.pause();
       chatContainer.style.display = "none"
     }
   }
@@ -218,7 +222,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => 
 
   const hell = createElementWithClassAndParent("div", chatBody, 'customer-service-hell');
 
-  const audio = new Audio("264828__cmdrobot__text-message-or-videogame-jump.mp3");
+  const audio = new Audio("http://farragofiction.com/CatalystsBathroomSim/264828__cmdrobot__text-message-or-videogame-jump.mp3");
   const parts = ramble.text.split("\n");
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
