@@ -17,6 +17,8 @@ please enjoy this horrible giant god file
 //which the bathroom sim in PARTICULAR prefers.
 //god help future me
 
+//https://www.youtube.com/watch?v=nvfjzF6eJR8
+
 const initialTime = new Date();
 const sinfulInjectedCSS = `
   <style>
@@ -131,6 +133,7 @@ const sinfulInjectedCSS = `
 
     .closer-chat-container{
       position: fixed;
+      z-index: 2000;
       right: 15%;
       top: 15px;
       margin-top: 65px;
@@ -532,8 +535,7 @@ const Lost = () => {
   return ramble;
 }
 
-const handleCloserPopup = ()=>{
-  window.alert("!!!");
+const handleCloserPopup = async()=>{
   /*
 Well, not one for conversation, hm?
 Straight to the point. I like that. It's an admirable trait in someone.
@@ -557,6 +559,16 @@ const container = document.querySelector("#room-container");
 const closerSprite = createElementWithClassAndParent("img", container,'sprite closer');
 closerSprite.src = "http://farragofiction.com/CatalystsBathroomSim/images/beast.png";
 container.append(closerSprite)
+await sleep(3000);
+const chatContainer = document.querySelector(".chat-container")
+chatContainer.style.display = "none";
+const body = document.querySelector("body");
+const closerPopup = createElementWithClassAndParent("div", body,'closer-chat-container');
+const closerHeader = createElementWithClassAndParent("div", closerPopup,'closer-chat-header');
+closerHeader.innerHTML = `<p>The Closer will fulfill your Customer Support needs.</p>`;
+const closerBody = createElementWithClassAndParent("div", closerPopup,'closer-chat-body');
+
+
 }
 
 const TheCloser = () => {
