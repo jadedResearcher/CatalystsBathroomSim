@@ -559,7 +559,7 @@ const container = document.querySelector("#room-container");
 const closerSprite = createElementWithClassAndParent("img", container,'sprite closer');
 closerSprite.src = "http://farragofiction.com/CatalystsBathroomSim/images/beast.png";
 container.append(closerSprite)
-await sleep(3000);
+await sleep(1000);
 const chatContainer = document.querySelector(".chat-container")
 chatContainer.style.display = "none";
 const body = document.querySelector("body");
@@ -568,6 +568,23 @@ const closerHeader = createElementWithClassAndParent("div", closerPopup,'closer-
 closerHeader.innerHTML = `<p>The Closer will fulfill your Customer Support needs.</p>`;
 const closerBody = createElementWithClassAndParent("div", closerPopup,'closer-chat-body');
 
+const closerChat = (line, parent)=>{
+  const ele = createElementWithClassAndParent("div", parent,'closer-chat-line');
+  
+  const icon = createElementWithClassAndParent("div", parent,'closer-chat-icon');
+  icon.innerText = "TC";
+
+  const textEle = createElementWithClassAndParent("div", parent,'closer-chat-text');
+  textEle.innerText = line;
+
+
+}
+
+closerChat("Straight to the point. I like that. It's an admirable trait in someone.", closerBody);
+await sleep(1000)
+closerChat("But yes, you /can/ buy things here with Gopher Gold. Or Candy, in some places. That infection from the corn maze runs deep, one supposes.", closerBody);
+await sleep(1000);
+closerChat("However, I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it.",closerBody);
 
 }
 
@@ -738,7 +755,7 @@ const ReturnToQueue = () => {
 
 
 const HelloWorld = () => {
-  const defaultRamble = `Hi there! My name is ${CURRENT_NAME}. You can begin by asking your question below! Someone will be with you shortly. Due to call volume, Restricted Text Only Mode has been initiated. Thank you for your patience! \n Please select an option below!`;
+  const defaultRamble = `Hi there! My name is ${CURRENT_NAME}. You can begin by asking your question below! Someone will be with you shortly. Due to call volume, Restricted Text Only Mode has been initiated. Thank you for your patience!`;
 
   const ramble = new CustomerServiceRamble(defaultRamble, []);
 
