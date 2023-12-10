@@ -20,6 +20,7 @@ please enjoy this horrible giant god file
 //https://www.youtube.com/watch?v=nvfjzF6eJR8
 
 const initialTime = new Date();
+const LOCAL_STORAGE_KEY = "BATHROOM_MAZE";
 const sinfulInjectedCSS = `
   <style>
 
@@ -218,6 +219,14 @@ const sinfulInjectedCSS = `
       animation: flipout 1s linear infinite;
     }
 
+    .closer-chat-options{
+
+      padding: 20px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     @keyframes flipout{
       0%,20%,40%,60%,80%,100%{
         transform: translate(0px, 10px);
@@ -264,7 +273,7 @@ const initHelpDesk = () => {
   const form_button = createElementWithClassAndParent("button", form, "styled-button");
   form_button.innerText = "Go"
 
- 
+
 
   const chatBody = createElementWithClassAndParent("div", chatContainer, 'chat-body');
   //oh hey, if you've found these secrets, maybe you can help people less comfortable with code find them?
@@ -273,17 +282,29 @@ const initHelpDesk = () => {
   //to make them realize how to proceed even if they aren't sufficiently wasted
   //in essence: would you like to make your own branch of zampanio?
   //its hard weaving puzzles into things, (either hints are too easy or too hard) which is why we should all practice while having fun
-  const initial_directory = { "operator": new CustomerSupportSpecialist("Quotidian Quorum InfoBroker System", "quick start", QQ()), 1152: new CustomerSupportSpecialist("Justified Recursion", "1152", JRK()), "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()), "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()), 0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()), "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()), "1": new CustomerSupportSpecialist("Not Found", "1", Lost()), 13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()), 4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()) };
-  
+  const initial_directory = {
+    "operator": new CustomerSupportSpecialist("Quotidian Quorum InfoBroker System",
+      "quick start", QQ()), 1152: new CustomerSupportSpecialist("Justified Recursion", "1152", JRK()),
+    "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()),
+    "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()),
+    "a parasite's lifespan": new CustomerSupportSpecialist("Justified Recursion", "a parasite's lifespan", JR3()),
+
+     0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()),
+      "411": new CustomerSupportSpecialist("Debug Bot","411", Debug()),
+       "1": new CustomerSupportSpecialist("Not Found", "1", Lost()),
+        13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()),
+         4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar())
+  };
+
   form.onsubmit = (e) => {
     e.preventDefault();
-    if((input.value in initial_directory) ){
+    if ((input.value in initial_directory)) {
       syncChatBodyToRamble(chatBody, initial_directory[input.value].ramble, initial_directory[input.value], initial_directory);
       //setCurrentRamble(directory[extension].ramble);
-  }else{
-    syncChatBodyToRamble(chatBody, initial_directory["1"].ramble, initial_directory["1"], initial_directory);
-    //setCurrentRamble(directory[1].ramble);
-  }
+    } else {
+      syncChatBodyToRamble(chatBody, initial_directory["1"].ramble, initial_directory["1"], initial_directory);
+      //setCurrentRamble(directory[1].ramble);
+    }
   }
 
   let synced = false;
@@ -314,7 +335,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => 
   let next_specialist = randomSpecialist(Math.round(time / 1000 / 60));
   if (!(next_specialist.extension in directory)) {
     directory[next_specialist.extension] = next_specialist;
-  }else{
+  } else {
     next_specialist = directory[next_specialist.extension]; //don't use the one we generated, use the one we already have
   }
 
@@ -326,7 +347,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
   for (let part of parts) {
     await sleep(1000 * getRandomNumberBetween(1, 5));
-    if(currentExtension != specialist.extension){
+    if (currentExtension != specialist.extension) {
       return;
     }
     renderOneLine(hell, specialist, next_specialist, part);
@@ -336,7 +357,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => 
   const optionsEle = createElementWithClassAndParent("div", chatBody, 'chat-options');
 
   for (let option of ramble.potential_reponses) {
-    if(currentExtension != specialist.extension){
+    if (currentExtension != specialist.extension) {
       return;
     }
     const optionEle = createElementWithClassAndParent("div", optionsEle, 'chat-option');
@@ -516,6 +537,15 @@ const JR2 = () => {
   return ramble;
 }
 
+
+const JR3 = () => {
+  const initialRamble = "Zampanio is a really fun game, you should play it. \n Lavinraca is a really fun game, you should ALSO play it. \n You are a really fun game. You should take care of your body.\nIt is only through your body, and the body of the rest of us infected, that Zampanio or Lavinraca can live on.\n You need to take care of yourself. Stay hydrated. Make friends. Consume things that aren't Zampanio. Be healthy.\n After all... A parasite's lifespan is only that of its host.";
+  const ramble = new CustomerServiceRamble(initialRamble, []);
+
+  return ramble;
+}
+
+
 const JRK = () => {
   const initialRamble = `
         That which is damaged being celebrated.
@@ -535,7 +565,7 @@ const Lost = () => {
   return ramble;
 }
 
-const handleCloserPopup = async()=>{
+const handleCloserPopup = async () => {
   /*
 Well, not one for conversation, hm?
 Straight to the point. I like that. It's an admirable trait in someone.
@@ -543,48 +573,88 @@ But yes, you /can/ buy things here with Gopher Gold.
 I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it.
   */
 
-/*
-  TODO: 
-  * render the closer from an absolute location into the room
-  * render closer pop up (css above)
-  * check the local directory store_inventory for files (wastes can get in there, its fine)
-  * if there is nothing in it, error handling (closer is warmly apologetic)
-  * if there is things in there (text, audio, images), sort alphabetically, each costs power of 2 (1,2,4,8,16, etc)
-  * if you have already purchased it before, little mark (you still WILL be charged for it, closer warns)
-  * if you purchase it, display it in some way (text or image in popup, audio playing in background) (can only play while in this bathroom, if you leave and come back will have to repurchase)
-  * in future lil mini games or things to do that give bonus gopher gold (like finding that picture room or ab)
-*/
+  /*
+    TODO: 
+    * render the closer from an absolute location into the room
+    * render closer pop up (css above)
+    * check the local directory store_inventory for files (wastes can get in there, its fine)
+    * if there is nothing in it, error handling (closer is warmly apologetic)
+    * if there is things in there (text, audio, images), sort alphabetically, each costs power of 2 (1,2,4,8,16, etc)
+    * if you have already purchased it before, little mark (you still WILL be charged for it, closer warns)
+    * if you purchase it, display it in some way (text or image in popup, audio playing in background) (can only play while in this bathroom, if you leave and come back will have to repurchase)
+    * in future lil mini games or things to do that give bonus gopher gold (like finding that picture room or ab)
+  */
 
-const container = document.querySelector("#room-container");
-const closerSprite = createElementWithClassAndParent("img", container,'sprite closer');
-closerSprite.src = "http://farragofiction.com/CatalystsBathroomSim/images/beast.png";
-container.append(closerSprite)
-await sleep(1000);
-const chatContainer = document.querySelector(".chat-container")
-chatContainer.style.display = "none";
-const body = document.querySelector("body");
-const closerPopup = createElementWithClassAndParent("div", body,'closer-chat-container');
-const closerHeader = createElementWithClassAndParent("div", closerPopup,'closer-chat-header');
-closerHeader.innerHTML = `<p>The Closer will fulfill your Customer Support needs.</p>`;
-const closerBody = createElementWithClassAndParent("div", closerPopup,'closer-chat-body');
+  const container = document.querySelector("#room-container");
+  const closerSprite = createElementWithClassAndParent("img", container, 'sprite closer');
+  closerSprite.src = "http://farragofiction.com/CatalystsBathroomSim/images/beast.png";
+  container.append(closerSprite)
+  await sleep(1000);
+  const chatContainer = document.querySelector(".chat-container")
+  chatContainer.style.display = "none";
+  const body = document.querySelector("body");
+  const closerPopup = createElementWithClassAndParent("div", body, 'closer-chat-container');
+  const closerHeader = createElementWithClassAndParent("div", closerPopup, 'closer-chat-header');
+  closerHeader.innerHTML = `<p>The Closer will fulfill your Customer Support needs.</p>`;
+  const closerBody = createElementWithClassAndParent("div", closerPopup, 'closer-chat-body');
+  const hell = createElementWithClassAndParent("div", closerBody, 'closer-customer-service-hell');
 
-const closerChat = (line, parent)=>{
-  const ele = createElementWithClassAndParent("div", parent,'closer-chat-line');
-  
-  const icon = createElementWithClassAndParent("div", parent,'closer-chat-icon');
-  icon.innerText = "TC";
+  const closerChat = (line, parent) => {
+    const ele = createElementWithClassAndParent("div", parent, 'closer-chat-line');
 
-  const textEle = createElementWithClassAndParent("div", parent,'closer-chat-text');
-  textEle.innerText = line;
+    const icon = createElementWithClassAndParent("div", parent, 'closer-chat-icon');
+    icon.innerText = "TC";
+
+    const textEle = createElementWithClassAndParent("div", parent, 'closer-chat-text');
+    textEle.innerText = line;
 
 
-}
+  }
 
-closerChat("Straight to the point. I like that. It's an admirable trait in someone.", closerBody);
-await sleep(1000)
-closerChat("But yes, you /can/ buy things here with Gopher Gold. Or Candy, in some places. That infection from the corn maze runs deep, one supposes.", closerBody);
-await sleep(1000);
-closerChat("However, I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it.",closerBody);
+  closerChat("Straight to the point. I like that. It's an admirable trait in someone.", hell);
+  await sleep(1000)
+  closerChat("But yes, you /can/ buy things here with Gopher Gold. Or Candy, in some places. That infection from the corn maze runs deep, one supposes.", hell);
+  await sleep(1000);
+
+  const tmpValue = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const wallet = tmpValue ? parseInt(tmpValue) : 0;
+  closerChat(`However, I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it. You currently have ${wallet} Gopher Gold. That is enough for:`, hell);
+
+
+  const handleError = () => {
+    closerChat(`Ah. How embarassing. I seem to have no stock to sell you. Please accept this consolation gift, as a measure of the esteem we here at Eyedol Games hold you.`, hell);
+    closerChat(`You can enter passwords in the customer support extension area. One such password is 'a parasite's lifespan'. `, hell);
+
+
+  }
+
+  try {
+    let everything = await getEverything("store_inventory2/");
+  } catch (e) {
+    handleError();
+    return;
+  }
+
+  if (everything.length === 0) {
+    handleError();
+    return;
+  }
+
+  const options = createElementWithClassAndParent("div", hell, 'closer-chat-options');
+
+
+  let index = 0;
+  for (let item of everything) {
+    const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
+    textEle.innerText = item + ` ${2 ** index} GG`;
+    index++;
+    /*
+      make a popup. if text, render. if image render. if audio, play (with controls in popup), if video, same
+    */
+
+  }
+
+
 
 }
 
@@ -784,4 +854,54 @@ const randomSpecialist = (frustration_level) => {
   const last_names = ["Researcher", "Gently", "Egbert", "Claire", "Lalonde", "Strider", "Hussain", "King", "Stoker", "Sims", "Blackwood", "Barker", "James", "Blake", "Dalon", "Vasil", "Hebert", "Jensen", "Lindt", "Newell", "Laborn", "Fell", "Wilbourn", "Livsey", "Lamb", "Bacama", "Kharun", "Reynolds", "Braggi", "Seelee", "Cassan", "Folnir", "Citato", "Grigor", "Crew", "Robertson", "Fairchild", "Lukas", "Richardson", "Dominguez", "Cane", "Salesa", "Shelly"];
   const name = `${pickFrom(first_names)} ${pickFrom(last_names)} `;
   return new CustomerSupportSpecialist(name, `${getRandomNumberBetween(2, 999)}`, GenericSupport(frustration_level));
+}
+
+
+const cachedEverthing = {}
+
+const everythingExtendsions = [
+  "png",
+  "gif",
+  "jpg",
+  "jpeg",
+  "wav",
+  "mp3",
+  "ogg",
+  "mp4"
+];
+const everythingFilePattern = new RegExp('<a href="([^?]*?)">', 'g');
+
+const everythingExtensionPattern = new RegExp(`\\\.(${everythingExtendsions.join("|")})\$`);
+
+
+const getEverything = async (url) => {
+  if (cachedEverthing[url]) {
+    return cachedEverthing[url];
+  }
+
+  let promise = new Promise(async (resolve, reject) => {
+    try {
+      const rawText = await httpGetAsync(url);
+
+      let files = [];
+      const match = rawText.matchAll(everythingFilePattern);
+      const matches = Array.from(match, (res) => res);
+      for (let m of matches) {
+        const item = m[1];
+        if (item.match(everythingExtensionPattern)) {
+          files.push(item);
+        }
+      }
+
+      cachedEverthing[url] = files;
+      //console.log("JR NOTE: returned from network for", url)
+      resolve(files);
+    } catch (e) {
+      console.log("JR NOTE: error", e)
+      reject();
+      return [];
+    }
+  })
+  cachedEverthing[url] = promise;
+  return promise;
 }
