@@ -289,11 +289,11 @@ const initHelpDesk = () => {
     "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()),
     "a parasite's lifespan": new CustomerSupportSpecialist("Justified Recursion", "a parasite's lifespan", JR3()),
 
-     0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()),
-      "411": new CustomerSupportSpecialist("Debug Bot","411", Debug()),
-       "1": new CustomerSupportSpecialist("Not Found", "1", Lost()),
-        13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()),
-         4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar())
+    0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()),
+    "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()),
+    "1": new CustomerSupportSpecialist("Not Found", "1", Lost()),
+    13: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar()),
+    4631: new CustomerSupportSpecialist("Spy Log", "0", CloseButStillTooFar())
   };
 
   form.onsubmit = (e) => {
@@ -628,8 +628,9 @@ I'm afraid I can only tell you what you can buy if you have enough Gopher Gold f
 
   }
 
+  let everything;
   try {
-    let everything = await getEverything("store_inventory2/");
+    everything = await getEverything("store_inventory/");
   } catch (e) {
     handleError();
     return;
@@ -645,9 +646,14 @@ I'm afraid I can only tell you what you can buy if you have enough Gopher Gold f
 
   let index = 0;
   for (let item of everything) {
-    const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
-    textEle.innerText = item + ` ${2 ** index} GG`;
-    index++;
+    const price = 2 ** index;
+    if (price <= wallet) {
+      const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
+      textEle.innerText = item + ` ${price} GG`;
+      index++;
+    } else {
+      break;
+    }
     /*
       make a popup. if text, render. if image render. if audio, play (with controls in popup), if video, same
     */
