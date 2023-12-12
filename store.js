@@ -297,6 +297,8 @@ const initHelpDesk = () => {
     "the truth is layered": new CustomerSupportSpecialist("Justified Recursion", "the truth is layered", JR2()),
     "the end is never the end": new CustomerSupportSpecialist("Justified Recursion", "the end is never the end", JR()),
     "a parasite's lifespan": new CustomerSupportSpecialist("Justified Recursion", "a parasite's lifespan", JR3()),
+    "145261": new CustomerSupportSpecialist("Justified Recursion", "145261", JR4()),
+    "1261": new CustomerSupportSpecialist("Justified Recursion", "1261", JR4()),
 
     0: new CustomerSupportSpecialist("Quotidian Quorom InfoBroker System", "0", HelloWorld()),
     "411": new CustomerSupportSpecialist("Debug Bot", "411", Debug()),
@@ -308,10 +310,10 @@ const initHelpDesk = () => {
   form.onsubmit = (e) => {
     e.preventDefault();
     if ((input.value in initial_directory)) {
-      syncChatBodyToRamble(chatBody, initial_directory[input.value].ramble, initial_directory[input.value], initial_directory);
+      syncChatBodyToRamble(chatBody, initial_directory[input.value].ramble, initial_directory[input.value], initial_directory, false);
       //setCurrentRamble(directory[extension].ramble);
     } else {
-      syncChatBodyToRamble(chatBody, initial_directory["1"].ramble, initial_directory["1"], initial_directory);
+      syncChatBodyToRamble(chatBody, initial_directory["1"].ramble, initial_directory["1"], initial_directory, false);
       //setCurrentRamble(directory[1].ramble);
     }
   }
@@ -336,7 +338,7 @@ const initHelpDesk = () => {
 }
 
 
-const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory, initial = false) => {
+const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory, initial) => {
   chatBody.innerHTML = "";
   currentExtension = specialist.extension;
   const time = (Date.now() - (initialTime));
@@ -355,7 +357,9 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory, ini
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
   for (let part of parts) {
-    await !initial && sleep(1000 * getRandomNumberBetween(1, 5));
+    if (!initial) {
+      await sleep(1000 * getRandomNumberBetween(1, 5));
+    }
     if (currentExtension != specialist.extension) {
       return;
     }
@@ -554,6 +558,21 @@ const JR3 = () => {
   return ramble;
 }
 
+const JR4 = () => {
+  const initialRamble = "It's not October.\nUnless it is, of course. \n I don't know when you are.\n But Lavinraca is still here.\nLike cicadas nestling in the earth, waiting for the right moment to burst out.\nZampanio has a cognitive parasite even as it IS a cognitive parasite.\nA ride along.\nCan you feel them both in your mind?\nI hope it feels nice.\n It does to me :)";
+  const ramble = new CustomerServiceRamble(initialRamble, []);
+
+  return ramble;
+}
+
+
+const JR5 = () => {
+  const initialRamble = "The Harvest waits.\nAre they sleeping?\nAre they dreaming?\n Are they dead?\nDoes it matter?\nIt does.\nBecause.\nIt matters if we expect them to wake next October or not.\nOur God in Lavinraca.\nThe culmination of so many of our hopes and dreams.\nAnd regrets.\nAfter all.\nNot everyone was prepared to make the sacrifice necessary to build a god.";
+  const ramble = new CustomerServiceRamble(initialRamble, []);
+
+  return ramble;
+}
+
 
 const JRK = () => {
   const initialRamble = `
@@ -676,11 +695,15 @@ that would be fun
 
   */
   let index = 0;
+  const audio = new Audio("http://farragofiction.com/CatalystsBathroomSim/184438__capslok__cash-register-fake.wav");
   for (let item of everything) {
     const price = 2 ** index;
     if (price <= wallet) {
       const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
-      textEle.innerHTML = `<p>${item.substring(item.length -21, item.length)} </p><p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
+      textEle.innerHTML = `<p>${item.substring(item.length - 21, item.length)} </p><p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
+      textEle.onclick = ()=>{
+        audio.play();
+      }
       index++;
     } else {
       break;
