@@ -194,6 +194,15 @@ const sinfulInjectedCSS = `
       border: 1px solid #c4c4c4;
       padding: 10px;
       border-radius: 8px;
+      height: 42px;
+      overflow: hidden;
+      cursor: pointer;
+      p{
+        padding: 2px;
+        margin: 2px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
     }
 
     .closer-chat-text{
@@ -315,7 +324,7 @@ const initHelpDesk = () => {
     if (chatContainer.style.display === "none") {
       audio.play();
       if (!synced) {
-        syncChatBodyToRamble(chatBody, initial_directory["0"].ramble, initial_directory["0"], initial_directory);
+        syncChatBodyToRamble(chatBody, initial_directory["0"].ramble, initial_directory["0"], initial_directory, true);
         synced = true;
       }
       chatContainer.style.display = "block";
@@ -327,7 +336,7 @@ const initHelpDesk = () => {
 }
 
 
-const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => {
+const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory, initial = false) => {
   chatBody.innerHTML = "";
   currentExtension = specialist.extension;
   const time = (Date.now() - (initialTime));
@@ -346,7 +355,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory) => 
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
   for (let part of parts) {
-    await sleep(1000 * getRandomNumberBetween(1, 5));
+    await !initial && sleep(1000 * getRandomNumberBetween(1, 5));
     if (currentExtension != specialist.extension) {
       return;
     }
@@ -644,12 +653,34 @@ I'm afraid I can only tell you what you can buy if you have enough Gopher Gold f
   const options = createElementWithClassAndParent("div", hell, 'closer-chat-options');
 
 
+  /*
+  https://youtu.be/P4bja_5JkM0?si=iLZp_DP2Rhzcjf3L&t=681
+so these are clearly seeds
+the whole point of seeded randomness is you give it a number (or something you can turn INTO a number (like i used with WIS) and you get unpredicatable outputs
+HOWEVER
+in a lot of my args
+i'll have special seeds or input or whatever
+where the randomness resolves and you get a result
+now
+THIS is DIFFICULT to fully leverage on a website 
+because the wastes can just dig into the code and find the special seeds
+i got around wthis with the audio log engine
+if you get it wrong you get the garbled mess and if you get it right you get the pre-created value
+my hypthosis is that this works via giving it a random seed and you get "bot does random comands for 1-10 seconds"
+but theres special seeds in this live version that get whatever is going to happen
+and doing THAT on a video wouldn't be hacked because theres no website, just a video of it
+but also it makes me wanna do an audio log engine that is just numbers not passwords
+where the point is "put in a random number for hours and see what you find"
+especially if i could port pl's glitch enigne
+that would be fun
+
+  */
   let index = 0;
   for (let item of everything) {
     const price = 2 ** index;
     if (price <= wallet) {
       const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
-      textEle.innerText = item + ` ${price} GG`;
+      textEle.innerHTML = `<p>${item.substring(item.length -21, item.length)} </p><p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
       index++;
     } else {
       break;
@@ -873,7 +904,8 @@ const everythingExtendsions = [
   "wav",
   "mp3",
   "ogg",
-  "mp4"
+  "mp4",
+  "txt"
 ];
 const everythingFilePattern = new RegExp('<a href="([^?]*?)">', 'g');
 

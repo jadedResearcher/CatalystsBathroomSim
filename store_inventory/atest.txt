@@ -1,0 +1,22 @@
+I am REALLY enjoying coding up Catalyst's Bathroom Simulator!!!
+
+Just the concept of a file system maze that is a bit more beefy than Gopher feeds me so well. I can hide so much mad science here!
+
+I was feeling a bit weird about how straight forward the current main page of farrago is, this fits the jumbled mess so much better!
+
+To say nothing of how MOST of zampanio is only accessible through three doors, each of which changes where it points based on day.
+
+Of course I'll still probably put the BIG stuff either there or the straightforward, filterable main page. 
+
+
+But isn't it nice to have a place I can put experiments and mad science and shit posts and tests?
+
+Though, not being able to find things again will be annoying. Still, I can do things like store them in git and deploy them to a maze location, if it really matters.
+
+
+
+Anyways, this is my test of the new "store" system. 
+
+I plan for there to be a store in the main entrance to the bathroom, and then scattered about. 
+
+Each store SHOULD have entirely unique offerings, so, keep an eye out :) :) ;) 
