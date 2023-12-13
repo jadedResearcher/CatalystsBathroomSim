@@ -66,6 +66,14 @@ const sinfulInjectedCSS = `
       }
     }
 
+    .small{
+      width: 100px !important;
+    }
+
+    .selected{
+      background: darkred !important;
+    }
+
     .chat-body{
       color: #1f3f87;
       background-color: #f8fafa;
@@ -149,13 +157,14 @@ const sinfulInjectedCSS = `
     }
 
     .closer-chat-header{
-      height: 50px;
+      height: 25px;
       color: white;
       background-color: #b72a21;
-      font-size: 14px;
-      padding: 20px;
+      font-size:22px;
+      padding: 5px;
       p{
           margin-left: 15px;
+          margin-top: 0px;
       }
     }
 
@@ -707,11 +716,107 @@ that would be fun
         audio.play();
         const closerPopup = createElementWithClassAndParent("div", body, 'closer-chat-container');
         const closerHeader = createElementWithClassAndParent("div", closerPopup, 'closer-chat-header');
-        closerHeader.innerHTML = `<p>${item}</p>`;
+        const closerHeaderDiv = createElementWithClassAndParent("div", closerHeader);
+        closerHeaderDiv.style.display = "flex";
+        closerHeaderDiv.style.justifyContent = "space-between";
+        const closerHeaderItem = createElementWithClassAndParent("p", closerHeaderDiv);
+        closerHeaderItem.innerHTML = item;
+        const closerHeaderClose = createElementWithClassAndParent("p", closerHeaderDiv);
+        closerHeaderClose.innerHTML = "X";
+        closerHeaderClose.style.cursor = "pointer";
+        closerHeaderClose.onclick = () => {
+          //JR NOTE: TODO stop any audio/video playing
+          closerPopup.remove();
+        }
+
+
+        //JR NOTE: terrible idea, could embed iframe websites too. i won't do this though. yet. the recursion is not yet justified.
+        const selectText = async ()=>{
+          hellInside.innerHTML = "Loading..."
+          const rawText = await httpGetAsync("store_inventory/" + item); //only one that won't fetch itself
+          hellInside.innerHTML = `<p style="padding: 20px;">${rawText.replaceAll("\n", "<br>")}</p>`;
+          const ele = document.querySelector(".text-option");
+          const prev = document.querySelector(".selected");
+          prev && prev.classList.remove("selected");
+          ele.classList.add("selected")
+        }
+
+        const selectImage = ()=>{
+          hellInside.innerHTML = `<img style="padding: 20px;" src='${"store_inventory/" + item}'>`;
+          const ele = document.querySelector(".image-option");
+          const prev = document.querySelector(".selected");
+          prev && prev.classList.remove("selected");
+          ele.classList.add("selected")
+        }
+
+        const selectMusic = ()=>{
+          hellInside.innerHTML = `<audio controls autoplay src='${"store_inventory/" + item}' loop style="padding:20px;">`;
+          const ele = document.querySelector(".music-option");
+          const prev = document.querySelector(".selected");
+          prev && prev.classList.remove("selected");
+          ele.classList.add("selected")
+        }
+
+        const selectVideo = ()=>{
+          hellInside.innerHTML = `<video controls autoplay src='${"store_inventory/" + item}' loop style="padding:20px;">`;
+          const ele = document.querySelector(".video-option");
+          const prev = document.querySelector(".selected");
+          prev && prev.classList.remove("selected");
+          ele.classList.add("selected")
+        }
+
+
+
+
         const closerBody = createElementWithClassAndParent("div", closerPopup, 'closer-chat-body');
         const hell = createElementWithClassAndParent("div", closerBody, 'closer-customer-service-hell');
-        const rawText = await httpGetAsync("store_inventory/"+item);
-        hell.innerHTML = `<p style="padding: 20px;">${rawText.replaceAll("\n","<br>")}</p>`
+
+        const textEle = createElementWithClassAndParent("div", hell, 'closer-chat-option small text-option');
+        textEle.innerText = "View As Text File";
+        textEle.onclick = selectText;
+
+
+        const imageEle = createElementWithClassAndParent("div", hell, 'closer-chat-option small image-option');
+        imageEle.innerText = "View As Image File";
+        imageEle.onclick = selectImage;
+
+        const musicEle = createElementWithClassAndParent("div", hell, 'closer-chat-option small music-option');
+        musicEle.innerText = "View As Music File";
+        musicEle.onclick = selectMusic;
+
+        const videoEle = createElementWithClassAndParent("div", hell, 'closer-chat-option small video-option');
+        videoEle.innerText = "View As Video File";
+        videoEle.onclick = selectVideo;
+
+        const hellInside = createElementWithClassAndParent("div", hell);
+        hellInside.innerHTML = "Loading..."
+        /*
+const everythingExtendsions = [
+  "png",
+  "gif",
+  "jpg",
+  "jpeg",
+  "wav",
+  "mp3",
+  "ogg",
+  "mp4",
+  "txt"
+];
+        */
+        if (item.includes(".txt")) {
+          selectText();
+        } else if (item.includes(".png") || item.includes(".PNG") || item.includes(".jpg") || item.includes(".jpeg")) {
+          selectImage();
+        } else if (item.includes(".wav") || item.includes(".mp3") || item.includes(".ogg")) {
+          selectMusic();
+        } else if (item.includes(".mp4")) {
+          selectVideo();
+        }
+
+
+
+
+
 
       }
       index++;
@@ -931,6 +1036,7 @@ const cachedEverthing = {}
 
 const everythingExtendsions = [
   "png",
+  "PNG",
   "gif",
   "jpg",
   "jpeg",

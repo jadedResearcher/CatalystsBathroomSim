@@ -222,6 +222,7 @@ const cachedAudio = {}
 
 const imageExtendsions = [
   "png",
+  "PNG",
   "gif",
   "jpg",
   "jpeg"
@@ -294,6 +295,8 @@ const getAudio = async(url)=>{
   cachedAudio[url] = promise;
   return promise;
 }
+
+
 
 //returns a promise which resolves with the content, prevents network spam
 const getImages = async (url) => {
