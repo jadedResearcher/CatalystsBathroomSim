@@ -1,3 +1,5 @@
+//http://farragofiction.com/CatalystsBathroomSim/EAST/SOUTH/NORTH/NORTH/EAST/SOUTH/NORTH/NORTH/EAST/SOUTH/EAST/SOUTH/NORTH/bathroom this might help you
+
 /*
 
 my first three branches of zampanio were in react because i wanted to get better for my jorb.
@@ -139,7 +141,7 @@ const sinfulInjectedCSS = `
       top: 15px;
       margin-top: 65px;
       height: 515px;
-      width: 1000px;
+      width: 80%;
       color: white;
       text-decoration: none;
       border-radius: 2px;
@@ -209,7 +211,7 @@ const sinfulInjectedCSS = `
       background: white;
       font-size; 14px;
       display: inline-block;
-      width: 800px;
+      width: 80%;
       margin-left: 10px;
       border: 1px solid #c4c4c4;
       padding: 10px;
@@ -701,8 +703,16 @@ that would be fun
     if (price <= wallet) {
       const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
       textEle.innerHTML = `<p>${item.substring(item.length - 21, item.length)} </p><p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
-      textEle.onclick = ()=>{
+      textEle.onclick = async () => {
         audio.play();
+        const closerPopup = createElementWithClassAndParent("div", body, 'closer-chat-container');
+        const closerHeader = createElementWithClassAndParent("div", closerPopup, 'closer-chat-header');
+        closerHeader.innerHTML = `<p>${item}</p>`;
+        const closerBody = createElementWithClassAndParent("div", closerPopup, 'closer-chat-body');
+        const hell = createElementWithClassAndParent("div", closerBody, 'closer-customer-service-hell');
+        const rawText = await httpGetAsync("store_inventory/"+item);
+        hell.innerHTML = `<p style="padding: 20px;">${rawText.replaceAll("\n","<br>")}</p>`
+
       }
       index++;
     } else {
