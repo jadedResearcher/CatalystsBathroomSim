@@ -16,4 +16,5 @@ If that would be too long you can include a filename.txt file as well (no orderi
 Because this is a file system maze, you can do file system fuckery (like symbolic links).
 
 
+If you want to have a store in a bathroom, copy "copyThisAndRunToMakeShop.sh" to that directory, it'll tell you what to do.
 
