@@ -22,7 +22,10 @@ please enjoy this horrible giant god file
 //https://www.youtube.com/watch?v=nvfjzF6eJR8
 
 const initialTime = new Date();
-const LOCAL_STORAGE_KEY = "BATHROOM_MAZE";
+const LOCAL_STORAGE_KEY_CANDY = "BATHROOM_MAZE";
+const LOCAL_STORAGE_KEY_PURCHASED_ITEMS = "BATHROOM_MAZE_PURCHASES";
+const LOCAL_STORAGE_KEY_RUNNING_TOTAL = "BATHROOM_MAZE_POINTS";
+
 const sinfulInjectedCSS = `
   <style>
 
@@ -368,7 +371,7 @@ const syncChatBodyToRamble = async (chatBody, ramble, specialist, directory, ini
 
   //for now just render it all in a big pile, but JR NOTE: TODO we need to time this
   for (let part of parts) {
-    if (!initial) {
+    if (!initial && !part.includes("The Closer")) { //i want the store to be fast, but also its funny if people just talk really fast about her
       await sleep(1000 * getRandomNumberBetween(1, 5));
     }
     if (currentExtension != specialist.extension) {
@@ -604,6 +607,67 @@ const Lost = () => {
   return ramble;
 }
 
+/*
+  //record that you've unlocked the item
+  //remove the cost from your wallet
+  //add the cost to your running amount of money spent
+*/
+const purchaseItem = (item, cost) => {
+  incrementLocalStorageByAmount(LOCAL_STORAGE_KEY_CANDY, cost * -1);
+  incrementLocalStorageByAmount(LOCAL_STORAGE_KEY_RUNNING_TOTAL, cost);
+  addStringToArrayWithKey(LOCAL_STORAGE_KEY_PURCHASED_ITEMS, item);
+}
+
+
+
+const addStringToArrayWithKey = (key, target) => {
+  console.log("JR NOTE: addStringToArrayWithKey", { key, target })
+
+  const tmp = valueAsArray(key);
+  tmp.push(target);
+  localStorage[key] = JSON.stringify(tmp);
+}
+
+const addNumToArrayWithKey = (key, target) => {
+  const tmp = valueAsArray(key);
+  tmp.push(target);
+  localStorage[key] = JSON.stringify(tmp);
+}
+
+
+const removeStringFromArrayWithKey = (key, target) => {
+  let tmp = valueAsArray(key);
+  tmp = removeItemOnce(tmp, target);
+  localStorage[key] = JSON.stringify(tmp);
+}
+
+const initEmptyArrayAtKey = (key) => {
+  const tmp = [];
+  localStorage[key] = JSON.stringify(tmp);
+  return tmp;
+}
+
+const valueAsArray = (key) => {
+  if (localStorage[key]) {
+    return JSON.parse(localStorage[key]);
+  } else {
+    return initEmptyArrayAtKey(key);
+  }
+}
+
+
+const incrementLocalStorageByAmount = (KEY, AMOUNT) => {
+
+  let current = localStorage.getItem(KEY);
+  if (!current) {
+    current = AMOUNT;
+  }
+  console.log("JR NOTE:", KEY, " was " + current)
+
+  localStorage.setItem(KEY, parseInt(current) + AMOUNT)
+
+}
+
 const handleCloserPopup = async () => {
   /*
 Well, not one for conversation, hm?
@@ -655,7 +719,7 @@ I'm afraid I can only tell you what you can buy if you have enough Gopher Gold f
   closerChat("But yes, you /can/ buy things here with Gopher Gold. Or Candy, in some places. That infection from the corn maze runs deep, one supposes.", hell);
   await sleep(1000);
 
-  const tmpValue = localStorage.getItem(LOCAL_STORAGE_KEY);
+  const tmpValue = localStorage.getItem(LOCAL_STORAGE_KEY_CANDY);
   const wallet = tmpValue ? parseInt(tmpValue) : 0;
   closerChat(`However, I'm afraid I can only tell you what you can buy if you have enough Gopher Gold for it. You currently have ${wallet} Gopher Gold. That is enough for:`, hell);
 
@@ -705,17 +769,31 @@ especially if i could port pl's glitch enigne
 that would be fun
 
   */
+
+  let inventory = localStorage.getItem(LOCAL_STORAGE_KEY_PURCHASED_ITEMS);
   let index = 0;
   const audio = new Audio("http://farragofiction.com/CatalystsBathroomSim/184438__capslok__cash-register-fake.wav");
   for (let item of everything) {
     const price = 2 ** index;
     if (price <= wallet) {
       const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
-      textEle.innerHTML = `<p>${item.substring(item.length - 21, item.length)} </p><p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
+      const purchased = inventory.includes(item);
+      textEle.innerHTML = `<p>${item.substring(item.length - 21, item.length)} </p>`
+      if(purchased){
+        textEle.innerHTML +=`Purchased!`;
+
+      }else{
+        textEle.innerHTML +=`<p style="text-align:center;font-weight: bolder;">${price} GG</p>`;
+      }
+      
       textEle.onclick = async () => {
-        audio.play();
-        const closerPopup = createElementWithClassAndParent("div", body, 'closer-chat-container');
-        const closerHeader = createElementWithClassAndParent("div", closerPopup, 'closer-chat-header');
+        closerPopup.remove(); //you can open it back up later.
+        if (!purchased) {
+          purchaseItem(item, price);
+          audio.play();
+        }
+        const itemPopup = createElementWithClassAndParent("div", body, 'closer-chat-container');
+        const closerHeader = createElementWithClassAndParent("div", itemPopup, 'closer-chat-header');
         const closerHeaderDiv = createElementWithClassAndParent("div", closerHeader);
         closerHeaderDiv.style.display = "flex";
         closerHeaderDiv.style.justifyContent = "space-between";
@@ -726,12 +804,12 @@ that would be fun
         closerHeaderClose.style.cursor = "pointer";
         closerHeaderClose.onclick = () => {
           //JR NOTE: TODO stop any audio/video playing
-          closerPopup.remove();
+          itemPopup.remove();
         }
 
 
         //JR NOTE: terrible idea, could embed iframe websites too. i won't do this though. yet. the recursion is not yet justified.
-        const selectText = async ()=>{
+        const selectText = async () => {
           hellInside.innerHTML = "Loading..."
           const rawText = await httpGetAsync("store_inventory/" + item); //only one that won't fetch itself
           hellInside.innerHTML = `<p style="padding: 20px;">${rawText.replaceAll("\n", "<br>")}</p>`;
@@ -741,7 +819,7 @@ that would be fun
           ele.classList.add("selected")
         }
 
-        const selectImage = ()=>{
+        const selectImage = () => {
           hellInside.innerHTML = `<img style="padding: 20px;" src='${"store_inventory/" + item}'>`;
           const ele = document.querySelector(".image-option");
           const prev = document.querySelector(".selected");
@@ -749,7 +827,7 @@ that would be fun
           ele.classList.add("selected")
         }
 
-        const selectMusic = ()=>{
+        const selectMusic = () => {
           hellInside.innerHTML = `<audio controls autoplay src='${"store_inventory/" + item}' loop style="padding:20px;">`;
           const ele = document.querySelector(".music-option");
           const prev = document.querySelector(".selected");
@@ -757,7 +835,7 @@ that would be fun
           ele.classList.add("selected")
         }
 
-        const selectVideo = ()=>{
+        const selectVideo = () => {
           hellInside.innerHTML = `<video controls autoplay src='${"store_inventory/" + item}' loop style="padding:20px;">`;
           const ele = document.querySelector(".video-option");
           const prev = document.querySelector(".selected");
@@ -768,7 +846,7 @@ that would be fun
 
 
 
-        const closerBody = createElementWithClassAndParent("div", closerPopup, 'closer-chat-body');
+        const closerBody = createElementWithClassAndParent("div", itemPopup, 'closer-chat-body');
         const hell = createElementWithClassAndParent("div", closerBody, 'closer-customer-service-hell');
 
         const textEle = createElementWithClassAndParent("div", hell, 'closer-chat-option small text-option');
@@ -829,14 +907,20 @@ const everythingExtendsions = [
 
   }
 
-
+return TheCloser(); //if you close the popup you can reopen it
 
 }
 
+
+
 const TheCloser = () => {
-  const defaultRamble = `One moment... `;
+  const defaultRamble = `I can take you to The Closer.`;
   const ramble = new CustomerServiceRamble(defaultRamble, []);
-  handleCloserPopup();
+  const handle = ()=>{
+    handleCloserPopup();
+    return ramble;
+  }
+  ramble.potential_reponses.push(new PlayerResponse("Take Me To The Closer", handle));
 
   return ramble;
 }
