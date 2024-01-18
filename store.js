@@ -777,7 +777,7 @@ that would be fun
     const price = 2 ** index;
     if (price <= wallet) {
       const textEle = createElementWithClassAndParent("div", options, 'closer-chat-option');
-      const purchased = inventory.includes(item);
+      const purchased = inventory && inventory.includes(item);
       textEle.innerHTML = `<p>${item.substring(item.length - 21, item.length)} </p>`
       if(purchased){
         textEle.innerHTML +=`Purchased!`;

@@ -8,6 +8,7 @@
   <title>Catalyst's Bathroom Sim</title>
   <script src="utils.js"></script>
   <script src="store.js"></script>
+  <script src="fruit_fuckery.js"></script>
 
   <style>
     body {
@@ -107,7 +108,7 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const date = new Date();
-      if(urlParams.get("friday")==="plzjrwantsin"){
+      if (urlParams.get("friday") === "plzjrwantsin") {
         return false;
       }
       if (urlParams.get("friday") || date.getHours() == 0 || date.getDay() === 5) {
@@ -117,7 +118,11 @@
     }
 
     window.onload = () => {
-      initHelpDesk();
+      try {
+        initHelpDesk();
+      } catch (e) {
+        //its fine
+      }
       if (isItFriday()) {
         const body = document.querySelector("body");
         body.innerHTML = `You really should take a break. This will still be here when you come back.
