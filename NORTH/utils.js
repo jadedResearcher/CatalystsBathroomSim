@@ -233,6 +233,7 @@ const extensionPattern = new RegExp(`\\\.(${imageExtendsions.join("|")})\$`);
 
 const audioExtensions = [
   "wav",
+  "mp3"
 ];
 const filePatternAudio = new RegExp('<a href="([^?]*?)">', 'g');
 

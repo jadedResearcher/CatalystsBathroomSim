@@ -67,9 +67,54 @@ initFruitFuckery = async ()=>{
   let tmp = await getImages(base_url);
   img.src = base_url + pickFrom(tmp);
 
-  await sleep(getRandomNumberBetween(3000,1000000));
-  initFruitFuckery();
-
-
-
+  await sleep(getRandomNumberBetween(5000,60000));
+  const music = await getWeirdMusic("http://farragofiction.com/CatalystsBathroomSim/audio_utils/weird_sounds/");
+  const audio = new Audio();
+  audio.src = "http://farragofiction.com/CatalystsBathroomSim/audio_utils/weird_sounds/" +pickFrom(music);
+  audio.play();
 }
+
+
+//key, value status
+const cachedAudioFruit = {}
+
+const audioExtensionsFruit = [
+  "mp3",
+];
+const filePatternAudioFruit = new RegExp('<a href="([^?]*?)">', 'g');
+
+const extensionPatternAudioFruit = new RegExp(`\\\.(${audioExtensionsFruit.join("|")})\$`);
+
+
+const getWeirdMusic = async(url)=>{
+  if (cachedAudioFruit[url]) {
+    return cachedAudioFruit[url];
+  }
+
+  let promise = new Promise(async (resolve, reject) => {
+    try {
+      const rawText = await httpGetAsync(url);
+
+      let files = [];
+      const match = rawText.matchAll(filePatternAudioFruit);
+      const matches = Array.from(match, (res) => res);
+      for (let m of matches) {
+        const item = m[1];
+        if (item.match(extensionPatternAudioFruit)) {
+          files.push(item);
+        }
+      }
+      cachedAudioFruit[url] = files;
+      //console.log("JR NOTE: returned from network for", url)
+      resolve(files);
+    } catch (e) {
+      console.log("JR NOTE: error", e)
+      reject();
+      return [];
+    }
+  })
+  cachedAudioFruit[url] = promise;
+  return promise;
+}
+
+window.addEventListener("load",initFruitFuckery)
