@@ -43,6 +43,7 @@ const sinfulInjectedCSSFruit = `
 
 
 initFruitFuckery = async ()=>{
+  await sleep(getRandomNumberBetween(5000,60000));
   const body = document.querySelector("body");
   const css = document.createElement("div");
   css.innerHTML = sinfulInjectedCSSFruit;
