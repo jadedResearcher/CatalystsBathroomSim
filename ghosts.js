@@ -42,11 +42,11 @@ const makeDollFromDirectories = async (directory_list) => {
 
   50% {
     transform: skewX(-1deg);
-    opacity: 0.4;
+    opacity: 0.31;
 
   }
 
-  150% {
+  100% {
     transform: skewX(1deg);
     opacity: 0.01;
 
