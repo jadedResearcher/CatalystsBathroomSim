@@ -14,6 +14,8 @@ const makeDollFromDirectories = async (directory_list) => {
     display: flex;
     z-index: 1000;
     opacity: 0.25;
+    animation: flicker 10s ease-in infinite;
+
 }
 
 .doll {
@@ -30,6 +32,25 @@ const makeDollFromDirectories = async (directory_list) => {
   top: 0px;
   left: 0px;
   filter: saturate(0.5) brightness(0.75);
+}
+
+@keyframes flicker {
+  0% {
+    transform: skewX(1deg);
+    opacity: 0.01;
+  }
+
+  50% {
+    transform: skewX(-1deg);
+    opacity: 0.4;
+
+  }
+
+  150% {
+    transform: skewX(1deg);
+    opacity: 0.01;
+
+  }
 }
   `
 
