@@ -30,7 +30,8 @@ const makeDollFromDirectories = async (directory_list) => {
   position: absolute;
   top: 0px;
   left: 0px;
-  filter: saturate(0.5) brightness(0.75);
+  filter: saturate(0.5) contrast(0.5) brightness(0.75);
+
 }
 
 @keyframes flicker {
@@ -41,7 +42,7 @@ const makeDollFromDirectories = async (directory_list) => {
 
   50% {
     transform: skewX(-1deg);
-    opacity: 0.85;
+    opacity: 0.31;
 
   }
 
