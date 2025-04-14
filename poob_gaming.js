@@ -36,19 +36,38 @@ if you click 'play' on the video preview/trailer you get one of my collection of
 let weird_videos;
 const video_url = "http://farragofiction.com/CatalystsBathroomSim/audio_utils/weird_sounds/weird_video/";
 
-const gamingDirectory = "http://farragofiction.com/CatalystsBathroomSim/images/Poob/";
+const poobDirectory = "http://farragofiction.com/CatalystsBathroomSim/images/Poob/";
 
 const ZAMPANIO_DIRECTORY = "Zampaniortress"
 
-const gamesRaw = `Beep%20Boop
-Farm%20Rage
-Grimdark%20Gambling
-Grizzled%20Man%20Quest
-Onii-Chan%20at%20Luchadore%20High
-Zampaniortress
-`;
 
-const games = gamesRaw.split("\n")
+
+const gamingWordsRaw = `Quest
+ Adventure
+ Simulator
+ Plus
+ TD
+ Race
+ FTP
+:Legends
+:Total Warfare
+ Pets
+ 2
+2
+II`;
+
+const gamingWords = gamingWordsRaw.split("\n")
+
+//even faker than normal!
+const fakeGames = {
+  "http://farragofiction.com/CatalystsBathroomSim/images/Poob/": ["Zampaniortress", "Medieval%20Fist%20Puncher", "Great%20Tourio%20Racing", "Literally%20Whos%20Sk8r", "Onii-Chan%20at%20Luchadore%20High", "Grizzled%20Man%20Quest", "Grimdark%20Gambling", "Farm%20Rage", "Beep%20Boop"]
+  , "http://eyedolgames.com/Zampanini/images/": ["Sushi", "Seafood", "Sandwiches", "Salad", "Premium", "Pizza", "Mexican", "Bakery", "Breakfast", "Burgers", "Chicken", "Coffee", "Desserts", "Diner", "Italian"]
+  , "http://eyedolgames.com/JackElope/images/SexySingles/": ["Creepy", "Scary", "Shambling", "Suggestive", "Suggestive%20Creepy"]
+  , "http://farragofiction.com/CatalystsBathroomSim/images/": ["froot"]
+  , "http://farragofiction.com/CatalystsBathroomSim/images/Bathrooms/": ["SafeBathrooms", "ScaryBathrooms"]
+}
+
+
 
 const sinfulInjectedCSSPoob = `
   .gaming-annoying-icon{
@@ -81,7 +100,7 @@ const sinfulInjectedCSSPoob = `
     position: fixed;
     z-index:9999;
     bottom: -1000px;
-                    bottom:0px;
+                    //bottom:0px;
     left: -5px;
     width: 100%;
     height: 95%;
@@ -89,6 +108,7 @@ const sinfulInjectedCSSPoob = `
 
     button{
         display: block;
+        cursor: not-allowed;
     margin-left: auto;
     margin-right: auto;
     background-color: rgba(220, 126, 186, 1);
@@ -315,25 +335,27 @@ initPoob = async () => {
   weird_videos = await getWeirdVideo(video_url);
 
 
-  const title = ZAMPANIO_DIRECTORY;
   const showcaseVideo = video_url + pickFromPoob(weird_videos)
 
-  renderPoob(annoyingContent, title, showcaseVideo);;
+  renderPoob(annoyingContent, poobDirectory, ZAMPANIO_DIRECTORY, showcaseVideo);;
   const popup = document.createElement("div");
   popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>Games On Our Website Are Beta</h1>Poob has all your favorite games, like Zampanio, in one convinient spot! Thanks for helping us test them in your favorite browsers!<br><br><i> Poob Has it For You!</i></div>`;
   poobPopup(annoyingContent, popup)
 }
 
-const renderPoob = async (annoyingContent, title, showcaseVideo) => {
+const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVideo) => {
   annoyingContent.innerHTML = "";
   const darkContainer = document.createElement("div")
   darkContainer.className = "dark-container";
   annoyingContent.append(darkContainer);
-  const images = await getWeirdImage(gamingDirectory + title + "/");
+  const images = await getWeirdImage(directory + subdirectory + "/");
 
-  console.log("JR NOTE: rendering poob", { annoyingContent, title, showcaseVideo })
+  const title = decodeURIComponent(subdirectory);
+  const result = title.replace(/([A-Z])/g, " $1");
+  const finalTitle = (result.charAt(0).toUpperCase() + result.slice(1)).trim();
+
   //webkit-playsinline="" x5-playsinline=""   name="media"
-  const showcaseVideoHTML = `<h2>${decodeURIComponent(title)}</h2><video controls="true" poster="${gamingDirectory + title + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
+  const showcaseVideoHTML = `<h2>${finalTitle}${pickFrom(gamingWords)}</h2><video controls="true" poster="${directory + subdirectory + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
       <source src="${showcaseVideo}" type="video/mp4">
       </video>`
 
@@ -346,16 +368,13 @@ const renderPoob = async (annoyingContent, title, showcaseVideo) => {
   const playButton = document.createElement("button");
   playButton.innerText = "Play Game For Free"
   ele.append(playButton)
-  playButton.onclick = ()=>{
+  playButton.onclick = () => {
     const popup = document.createElement("div");
     popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>:( :( :(</h1>[ERROR DETECTED: GAME NOT FOUND]<br><br><i> Poob Does Not Have it For You...</i></div>`;
     poobPopup(annoyingContent, popup)
   }
 
   const videoEle = ele.querySelector("video")
-
-
-
 
   //get scroll component of sample images for the game
   const videoScrollUnder = document.createElement("div");
@@ -365,7 +384,7 @@ const renderPoob = async (annoyingContent, title, showcaseVideo) => {
   for (let image of images) {
     const img = document.createElement("div");
     img.class = "gallery-item"
-    const src = gamingDirectory + title + "/" + image;
+    const src = directory + subdirectory + "/" + image;
     img.innerHTML = `<img class='poob-thumbnail' src='${src}'>`;
     videoScrollUnder.append(img);
     img.onclick = () => {
@@ -384,22 +403,47 @@ const renderGames = async (annoyingContent, darkContainer) => {
   videoScrollUnder.id = "thumbnails-under"
   darkContainer.append(videoScrollUnder);
 
-  for (let game of games) {
-    const images = await getWeirdImage(gamingDirectory + game + "/");
+  for (let game of Object.values(fakeGames[poobDirectory])) {
+    const images = await getWeirdImage(poobDirectory + game + "/");
     const image = images[0];
     const img = document.createElement("div");
     img.class = "gallery-item"
-    const src = gamingDirectory + game + "/" + image;
+    const src = poobDirectory + game + "/" + image;
     img.innerHTML = `<img class='poob-thumbnail' src='${src}'>`;
     videoScrollUnder.append(img);
     img.onclick = () => {
-      renderPoob(annoyingContent, game, video_url + pickFromPoob(weird_videos)
-      )
-
-
+      renderPoob(annoyingContent, poobDirectory, game, video_url + pickFromPoob(weird_videos));;
     }
   }
+  renderFakeGame(annoyingContent, videoScrollUnder)
 }
+
+
+
+//grab a few, render this infinitely as it scrolls
+//yes these will be different EVERY click
+// have fun with that
+//poob is alpha :) :) :)
+const renderFakeGame = async (annoyingContent, videoScrollUnder) => {
+  //grab a random fakeGame key
+  const selectedGameCategory = pickFrom(Object.keys(fakeGames));
+  const gameFolder = pickFrom(fakeGames[selectedGameCategory]);
+
+
+  const url = selectedGameCategory + gameFolder + "/";
+
+  const images = await getWeirdImage(url);
+  const image = images[0];
+  const img = document.createElement("div");
+  img.class = "gallery-item"
+  const src = url + image;
+  img.innerHTML = `<img class='poob-thumbnail' src='${src}'>`;
+  videoScrollUnder.append(img);
+  img.onclick = () => {
+    renderPoob(annoyingContent, selectedGameCategory, gameFolder, video_url + pickFromPoob(weird_videos));
+  }
+}
+
 
 //lazy namespacing for all!
 
