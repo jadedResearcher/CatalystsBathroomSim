@@ -81,11 +81,27 @@ const sinfulInjectedCSSPoob = `
     position: fixed;
     z-index:9999;
     bottom: -1000px;
-                    //bottom:0px;
+                    bottom:0px;
     left: -5px;
     width: 100%;
     height: 95%;
     background: radial-gradient(circle,rgba(10, 20, 107, 1) 0%, rgba(145, 87, 199, 1) 92%, rgba(220, 126, 186, 1) 100%);
+
+    button{
+        display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(220, 126, 186, 1);
+    outline: none;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    }
+
+    button:hover{
+        background-color: rgb(238, 146, 204);
+
+    }
   }
 
   #show-case-container{
@@ -301,11 +317,11 @@ initPoob = async () => {
 
   const title = ZAMPANIO_DIRECTORY;
   const showcaseVideo = video_url + pickFromPoob(weird_videos)
-  
+
   renderPoob(annoyingContent, title, showcaseVideo);;
   const popup = document.createElement("div");
   popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>Games On Our Website Are Beta</h1>Poob has all your favorite games, like Zampanio, in one convinient spot! Thanks for helping us test them in your favorite browsers!<br><br><i> Poob Has it For You!</i></div>`;
-  poobPopup(annoyingContent,popup)
+  poobPopup(annoyingContent, popup)
 }
 
 const renderPoob = async (annoyingContent, title, showcaseVideo) => {
@@ -327,7 +343,19 @@ const renderPoob = async (annoyingContent, title, showcaseVideo) => {
   ele.innerHTML = showcaseVideoHTML;
   darkContainer.append(ele);
 
+  const playButton = document.createElement("button");
+  playButton.innerText = "Play Game For Free"
+  ele.append(playButton)
+  playButton.onclick = ()=>{
+    const popup = document.createElement("div");
+    popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>:( :( :(</h1>[ERROR DETECTED: GAME NOT FOUND]<br><br><i> Poob Does Not Have it For You...</i></div>`;
+    poobPopup(annoyingContent, popup)
+  }
+
   const videoEle = ele.querySelector("video")
+
+
+
 
   //get scroll component of sample images for the game
   const videoScrollUnder = document.createElement("div");
@@ -476,7 +504,7 @@ const getWeirdImage = async (url) => {
   return promise;
 }
 
-const poobPopup =  (parent, contentEle) => {
+const poobPopup = (parent, contentEle) => {
   console.log("JR NOTE: poobPopup")
   const popup = createElementWithClassAndParent("div", parent, "poob-popup");
 
