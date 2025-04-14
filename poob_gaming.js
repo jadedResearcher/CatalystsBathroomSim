@@ -43,17 +43,54 @@ const ZAMPANIO_DIRECTORY = "Zampaniortress"
 
 
 const gamingWordsRaw = `Quest
- Adventure
- Simulator
- Plus
- TD
- Race
- FTP
-:Legends
-:Total Warfare
+Adventure
+Horror
+Killer
+Zampanio
+Spiral
+World
+War
+Space
+Galaxy
+Dead
+Magic
+Guns
+Shooter
+Black
+Play
+Game
+White
+Neon
+Ghost
+Trick
+Puzzle
+City
+Kings
+Queens
+Dungeon
+Dragon
+Rise
+Moon
+Deluxe
+Maker
+Evil
+Empires
+Simulator
+Plus
+TD
+Race
+FTP
+Legends
+Total Warfare
  Pets
- 2
++
 2
+3
+4
+5
+6
+7
+8
 II`;
 
 const gamingWords = gamingWordsRaw.split("\n")
@@ -327,9 +364,19 @@ initPoob = async () => {
   annoyingIcon.append(annoyingIconImage)
   body.append(annoyingIcon);
 
+
   const annoyingContent = document.createElement("div")
   annoyingContent.className = "gaming-annoying-content";
   annoyingIcon.append(annoyingContent);
+  
+  annoyingIcon.onclick = (event)=>{
+    event.stopPropagation();
+    annoyingContent.style.bottom="0px";
+  }
+
+  body.onclick=(event)=>{
+    annoyingContent.style.bottom="10000px"
+  }
 
 
 
@@ -353,10 +400,20 @@ const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVide
 
   const title = decodeURIComponent(subdirectory);
   const result = title.replace(/([A-Z])/g, " $1");
-  const finalTitle = (result.charAt(0).toUpperCase() + result.slice(1)).trim();
+  let finalTitle = (result.charAt(0).toUpperCase() + result.slice(1)).trim();
+
+  const titleTemplatesRaw = `${finalTitle} ${pickFrom(gamingWords)}
+  ${pickFrom(gamingWords)} ${finalTitle}
+  ${pickFrom(gamingWords)} ${finalTitle} ${pickFrom(gamingWords)}
+  ${finalTitle}:${pickFrom(gamingWords)}
+  ${finalTitle}:${pickFrom(gamingWords)} ${pickFrom(gamingWords)}
+  ${finalTitle}`;
+
+  const titleTemplates = titleTemplatesRaw.split("\n")
+
 
   //webkit-playsinline="" x5-playsinline=""   name="media"
-  const showcaseVideoHTML = `<h2>${finalTitle}${pickFrom(gamingWords)}</h2><video controls="true" poster="${directory + subdirectory + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
+  const showcaseVideoHTML = `<h2>${pickFrom(titleTemplates)}</h2><video controls="true" poster="${directory + subdirectory + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
       <source src="${showcaseVideo}" type="video/mp4">
       </video>`
 
