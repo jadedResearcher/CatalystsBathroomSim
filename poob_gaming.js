@@ -53,6 +53,8 @@ const games = gamesRaw.split("\n")
 const sinfulInjectedCSSPoob = `
   .gaming-annoying-icon{
     position: absolute; 
+        font-family: Trebuchet MS;
+    font-weight: bolder;
     left: 13px;
     bottom: 13px;
     width: 113px;
@@ -121,6 +123,13 @@ const sinfulInjectedCSSPoob = `
 .dark-container{
     background: rgba(0, 0, 0, 0.5);
     width: 100%;
+    height: 100%;
+    margin: 3px;
+    padding:13px;
+}
+
+.dark-container-popup{
+    background: rgba(0, 0, 0, 0.65);
     height: 100%;
     margin: 3px;
     padding:13px;
@@ -217,6 +226,52 @@ const sinfulInjectedCSSPoob = `
   border-radius: 5px;
 }
 
+.poob-popup-title-container {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(220, 126, 186, 1);
+}
+
+.poob-popup img{
+  width: 81px;
+  margin-left: auto;
+  display: block;
+  margin-bottom: 59px;
+}
+
+.poob-popup {
+    color: rgba(220, 126, 186, 1);
+    overflow: hidden;
+    box-shadow: -13px 13px 33px black;
+    font-family: Trebuchet MS;
+    font-weight: bolder;
+    background: black;
+    transform: translate(-50%, -50%);
+    font-family: 'Courier New', Courier, monospace;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 18px;
+    background: radial-gradient(circle,rgba(10, 20, 107, 1) 0%, rgba(145, 87, 199, 1) 92%, rgba(220, 126, 186, 1) 100%);
+    width: 400px;
+    height: 400px;
+    z-index: 9999;
+    border-radius: 13px;
+}
+
+.poob-popup-title {
+    width: 90%;
+    text-align: center;
+    font-size: 32px;
+    line-height: 44px;
+    font-weight: bolder;
+}
+
+
+
 `;
 
 
@@ -239,12 +294,18 @@ initPoob = async () => {
   annoyingContent.className = "gaming-annoying-content";
   annoyingIcon.append(annoyingContent);
 
+
+
   weird_videos = await getWeirdVideo(video_url);
 
 
   const title = ZAMPANIO_DIRECTORY;
   const showcaseVideo = video_url + pickFromPoob(weird_videos)
-  renderPoob(annoyingContent, title, showcaseVideo)
+  
+  renderPoob(annoyingContent, title, showcaseVideo);;
+  const popup = document.createElement("div");
+  popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>Games On Our Website Are Beta</h1>Poob has all your favorite games, like Zampanio, in one convinient spot! Thanks for helping us test them in your favorite browsers!<br><br><i> Poob Has it For You!</i></div>`;
+  poobPopup(annoyingContent,popup)
 }
 
 const renderPoob = async (annoyingContent, title, showcaseVideo) => {
@@ -414,6 +475,26 @@ const getWeirdImage = async (url) => {
   cachedImagePoob[url] = promise;
   return promise;
 }
+
+const poobPopup =  (parent, contentEle) => {
+  console.log("JR NOTE: poobPopup")
+  const popup = createElementWithClassAndParent("div", parent, "poob-popup");
+
+  popup.focus();
+
+
+  const popupbody = createElementWithClassAndParent("div", popup);
+  popupbody.append(contentEle);
+
+  popup.onclick = () => {
+    popup.remove();
+    //just in case somehow theres multiple
+    document.querySelectorAll(".poob-popup").forEach((x) => x.remove());
+  }
+
+  return popup;
+}
+
 
 
 window.addEventListener("load", initPoob)
