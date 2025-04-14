@@ -62,7 +62,7 @@ const gamingWords = gamingWordsRaw.split("\n")
 const fakeGames = {
   "http://farragofiction.com/CatalystsBathroomSim/images/Poob/": ["Zampaniortress", "Medieval%20Fist%20Puncher", "Great%20Tourio%20Racing", "Literally%20Whos%20Sk8r", "Onii-Chan%20at%20Luchadore%20High", "Grizzled%20Man%20Quest", "Grimdark%20Gambling", "Farm%20Rage", "Beep%20Boop"]
   , "http://eyedolgames.com/Zampanini/images/": ["Sushi", "Seafood", "Sandwiches", "Salad", "Premium", "Pizza", "Mexican", "Bakery", "Breakfast", "Burgers", "Chicken", "Coffee", "Desserts", "Diner", "Italian"]
-  , "http://eyedolgames.com/JackElope/images/SexySingles/": ["Creepy", "Scary", "Shambling", "Suggestive", "Suggestive%20Creepy"]
+  , "http://eyedolgames.com/JackElope/images/SexySingles/": ["Scary", "Shambling", "Suggestive%20Creepy"]
   , "http://farragofiction.com/CatalystsBathroomSim/images/": ["froot"]
   , "http://farragofiction.com/CatalystsBathroomSim/images/Bathrooms/": ["SafeBathrooms", "ScaryBathrooms"]
 }
@@ -71,9 +71,10 @@ const fakeGames = {
 
 const sinfulInjectedCSSPoob = `
   .gaming-annoying-icon{
-    position: absolute; 
-        font-family: Trebuchet MS;
+    position: fixed; 
+    font-family: Trebuchet MS;
     font-weight: bolder;
+    z-index: 9999;
     left: 13px;
     bottom: 13px;
     width: 113px;
@@ -99,7 +100,7 @@ const sinfulInjectedCSSPoob = `
   .gaming-annoying-content{
     position: fixed;
     z-index:9999;
-    bottom: -1000px;
+    bottom: -10000px;
                     //bottom:0px;
     left: -5px;
     width: 100%;
@@ -416,6 +417,11 @@ const renderGames = async (annoyingContent, darkContainer) => {
     }
   }
   renderFakeGame(annoyingContent, videoScrollUnder)
+  renderFakeGame(annoyingContent, videoScrollUnder)
+  renderFakeGame(annoyingContent, videoScrollUnder)
+  renderFakeGame(annoyingContent, videoScrollUnder)
+  renderFakeGame(annoyingContent, videoScrollUnder)
+
 }
 
 
@@ -433,7 +439,7 @@ const renderFakeGame = async (annoyingContent, videoScrollUnder) => {
   const url = selectedGameCategory + gameFolder + "/";
 
   const images = await getWeirdImage(url);
-  const image = images[0];
+  const image = pickFrom(images);
   const img = document.createElement("div");
   img.class = "gallery-item"
   const src = url + image;
