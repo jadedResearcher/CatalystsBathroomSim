@@ -1,6 +1,6 @@
 /*
 
-important note: half the time this purposefully does nothing because its extremely funny to make everyone doubt it exists
+important note: most of the time this purposefully does nothing because its extremely funny to make everyone doubt it exists
 including future me, who will forget having made this and just see it one day in the corner and get spooked
 
 you think im joking but like, fully half my zampanio branch is me being spooked by my own shennanigans
@@ -667,6 +667,6 @@ const poobPopup = (parent, contentEle) => {
 }
 
 
-if(Math.random()>0.5){
+if(Math.random()>0.81){ //81 is the quotidian arc number (100-19)
   window.addEventListener("load", initPoob)
 }
