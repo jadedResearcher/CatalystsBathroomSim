@@ -1,4 +1,13 @@
 /*
+
+important note: half the time this purposefully does nothing because its extremely funny to make everyone doubt it exists
+including future me, who will forget having made this and just see it one day in the corner and get spooked
+
+you think im joking but like, fully half my zampanio branch is me being spooked by my own shennanigans
+
+im rainbows with myself
+
+
 poob has it for you
 
 you can't watch goncharov anywhere that isn't poob
