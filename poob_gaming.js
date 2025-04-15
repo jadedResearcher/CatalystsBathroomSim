@@ -99,7 +99,7 @@ const gamingWords = gamingWordsRaw.split("\n")
 const fakeGames = {
   "http://farragofiction.com/CatalystsBathroomSim/images/Poob/": ["Zampaniortress", "Medieval%20Fist%20Puncher", "Great%20Tourio%20Racing", "Literally%20Whos%20Sk8r", "Onii-Chan%20at%20Luchadore%20High", "Grizzled%20Man%20Quest", "Grimdark%20Gambling", "Farm%20Rage", "Beep%20Boop"]
   , "http://eyedolgames.com/Zampanini/images/": ["Sushi", "Seafood", "Sandwiches", "Salad", "Premium", "Pizza", "Mexican", "Bakery", "Breakfast", "Burgers", "Chicken", "Coffee", "Desserts", "Diner", "Italian"]
-  , "http://eyedolgames.com/JackElope/images/SexySingles/": ["Scary", "Shambling", "Suggestive%20Creepy"]
+  , "http://eyedolgames.com/JackElope/images/SexySingles/": ["Scary", "Shambling"]
   , "http://farragofiction.com/CatalystsBathroomSim/images/": ["froot"]
   , "http://farragofiction.com/CatalystsBathroomSim/images/Bathrooms/": ["SafeBathrooms", "ScaryBathrooms"]
 }
@@ -183,6 +183,7 @@ const sinfulInjectedCSSPoob = `
     h2{
       margin-left: 31px;
       position: absolute;
+      color: #c4c4c4;
     }
   }
 
@@ -266,8 +267,8 @@ const sinfulInjectedCSSPoob = `
 }
 
 #thumbnails-under-video img{
-  width: 113px;
-  height: 100%;
+  width: 200px;
+  height: 113px;
   fit-content: cover;
   border: 1px solid #c4c4c4;
 }
@@ -293,8 +294,8 @@ const sinfulInjectedCSSPoob = `
 }
 
 #thumbnails-under img{
-  width: 113px;
-  height: 100%;
+  width: 200px;
+  height: 113px;
   fit-content: cover;
   border: 1px solid #c4c4c4;
   border-radius: 5px;
@@ -368,19 +369,20 @@ initPoob = async () => {
   const annoyingContent = document.createElement("div")
   annoyingContent.className = "gaming-annoying-content";
   annoyingIcon.append(annoyingContent);
-  
-  annoyingIcon.onclick = (event)=>{
+
+  annoyingIcon.onclick = (event) => {
     event.stopPropagation();
-    annoyingContent.style.bottom="0px";
+    annoyingContent.style.bottom = "0px";
   }
 
-  body.onclick=(event)=>{
-    annoyingContent.style.bottom="10000px"
+  body.onclick = (event) => {
+    annoyingContent.style.bottom = "10000px"
   }
 
 
 
   weird_videos = await getWeirdVideo(video_url);
+  
 
 
   const showcaseVideo = video_url + pickFromPoob(weird_videos)
@@ -396,7 +398,7 @@ const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVide
   const darkContainer = document.createElement("div")
   darkContainer.className = "dark-container";
   annoyingContent.append(darkContainer);
-  const images = await getWeirdImage(directory + subdirectory + "/");
+  let images = await getWeirdImage(directory + subdirectory + "/");
 
   const title = decodeURIComponent(subdirectory);
   const result = title.replace(/([A-Z])/g, " $1");
@@ -410,10 +412,14 @@ const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVide
   ${finalTitle}`;
 
   const titleTemplates = titleTemplatesRaw.split("\n")
+  let pick = pickFrom(titleTemplates)
+  if (pick.includes("Zampanio")) {
+    pick = "Zampanio"//get rid of extra words for an easter egg.
+  }
 
 
   //webkit-playsinline="" x5-playsinline=""   name="media"
-  const showcaseVideoHTML = `<h2>${pickFrom(titleTemplates)}</h2><video controls="true" poster="${directory + subdirectory + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
+  const showcaseVideoHTML = `<h2>${pick}</h2><video controls="true" poster="${directory + subdirectory + "/" + images[0]}"   loop="true"  playsinline="" webkit-playsinline="" x5-playsinline=""   name="media">
       <source src="${showcaseVideo}" type="video/mp4">
       </video>`
 
@@ -427,6 +433,9 @@ const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVide
   playButton.innerText = "Play Game For Free"
   ele.append(playButton)
   playButton.onclick = () => {
+    if (pick === "Zampanio") {
+      window.open("http://farragofiction.com/RabbitSim/", "_blank")
+    }
     const popup = document.createElement("div");
     popup.innerHTML = `<div class='dark-container-popup'><img src='http://farragofiction.com/CatalystsBathroomSim/images/Poob/POOB-LOGO.png'> <h1>:( :( :(</h1>[ERROR DETECTED: GAME NOT FOUND]<br><br><i> Poob Does Not Have it For You...</i></div>`;
     poobPopup(annoyingContent, popup)
@@ -439,6 +448,7 @@ const renderPoob = async (annoyingContent, directory, subdirectory, showcaseVide
   videoScrollUnder.className = "scroll-under-video dark-container"
   videoScrollUnder.id = "thumbnails-under-video"
   ele.append(videoScrollUnder)
+  images = shuffle(images);
   for (let image of images) {
     const img = document.createElement("div");
     img.class = "gallery-item"
@@ -462,7 +472,7 @@ const renderGames = async (annoyingContent, darkContainer) => {
   darkContainer.append(videoScrollUnder);
 
   for (let game of Object.values(fakeGames[poobDirectory])) {
-    const images = await getWeirdImage(poobDirectory + game + "/");
+    let images = await getWeirdImage(poobDirectory + game + "/");
     const image = images[0];
     const img = document.createElement("div");
     img.class = "gallery-item"
@@ -480,7 +490,24 @@ const renderGames = async (annoyingContent, darkContainer) => {
   renderFakeGame(annoyingContent, videoScrollUnder)
 
 }
+const shuffle = (array) => {
+  var currentIndex = array.length, temporaryValue, randomIndex;
 
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 
 //grab a few, render this infinitely as it scrolls
@@ -631,5 +658,6 @@ const poobPopup = (parent, contentEle) => {
 }
 
 
-
-window.addEventListener("load", initPoob)
+if(Math.random()>0.5){
+  window.addEventListener("load", initPoob)
+}
