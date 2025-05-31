@@ -1,7 +1,7 @@
 
 
-    //key, value status
-    const cachedWeirdVideoNamespacePleaseInternalOnly = {}
+//key, value status
+const cachedWeirdVideoNamespacePleaseInternalOnly = {}
 
 //got tired of always adding this to places that didn't have a way to do this. so. here we are.
 //now it is its own file, hosted once, in the bathroom
@@ -26,6 +26,44 @@ const getWeirdVideosArray = async (shuffled) => {
 
     return array;
   }
+
+  //async, you'll want to await this.
+  //since using this will mean you don't have anything on screen yet, you'll want some kinda placeholder
+  const httpGetAsync = async (theUrl) => {
+    return new Promise(function (resolve, reject) {
+
+      let xhr = new XMLHttpRequest();
+      try {
+        xhr.open("get", theUrl);
+
+        xhr.onload = function () {
+          if (this.status >= 200 && this.status < 300) {
+            resolve(xhr.response);
+          } else {
+            //window.alert("AN UNKNOWN NETWORK ERROR HAS OCCURED")
+            reject({
+              status: this.status,
+              statusText: xhr.statusText
+            });
+          }
+        };
+        xhr.onerror = function () {
+          //window.alert("AN UNKNOWN NETWORK ERROR HAS OCCURED")
+          reject({
+            status: this.status,
+            statusText: xhr.statusText
+          });
+        };
+        xhr.send();
+      } catch (e) {
+        console.error(e);
+        //window.alert("AN UNKNOWN NETWORK ERROR HAS OCCURED")
+        return `[]`;
+      }
+    });
+  }
+
+
 
   const getWeirdVideo = async (url) => {
 
@@ -69,7 +107,7 @@ const getWeirdVideosArray = async (shuffled) => {
 
   const video_url = "http://farragofiction.com/CatalystsBathroomSim/audio_utils/weird_sounds/weird_video/?C=M;O=D";
   weird_videos = await getWeirdVideo(video_url);
-  weird_videos = weird_videos.map((i)=>`${video_url.replace("?C=M;O=D","")}/${i}`)
+  weird_videos = weird_videos.map((i) => `${video_url.replace("?C=M;O=D", "")}/${i}`)
 
 
 
