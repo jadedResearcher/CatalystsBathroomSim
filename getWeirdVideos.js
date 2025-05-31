@@ -7,6 +7,24 @@ const cachedWeirdVideoNamespacePleaseInternalOnly = {}
 //now it is its own file, hosted once, in the bathroom
 const getWeirdVideosArray = async (shuffled) => {
 
+  const isItFriday = () => {
+    //midnight and fridays are wungle time
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const date = new Date();
+    if (urlParams.get("friday") === "plzjrwantsin") {
+      return false;
+    }
+    if (urlParams.get("friday") || date.getHours() == 0 || date.getDay() === 5) {
+      return true;
+    }
+    return false;
+  }
+
+  if(isItFriday()){
+    return ["http://farragofiction.com/CatalystsBathroomSim/audio_utils/weird_sounds/jr_says_sleep.mp4"]
+  }
+
   //put it in here so it doesn't polute the namespace, lol
   const shuffle = (array) => {
     var currentIndex = array.length, temporaryValue, randomIndex;
