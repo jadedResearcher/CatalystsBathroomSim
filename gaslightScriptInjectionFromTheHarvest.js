@@ -156,6 +156,7 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
 
   const getWeirdScripts = async () => {
     const url = script_url;
+    const cachedFile = {};
 
     const videoExtensionsPoob = [
       "js"
@@ -163,8 +164,8 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
     const filePatternVideoPoob = new RegExp('<a href="([^?]*?)">', 'g');
 
     const extensionPatternVideoPoob = new RegExp(`\\\.(${videoExtensionsPoob.join("|")})\$`);
-    if (cachedWeirdVideoNamespacePleaseInternalOnly[url]) {
-      return cachedWeirdVideoNamespacePleaseInternalOnly[url];
+    if (cachedFile[url]) {
+      return cachedFile[url];
     }
 
     let promise = new Promise(async (resolve, reject) => {
@@ -180,7 +181,7 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
             files.push(item);
           }
         }
-        cachedWeirdVideoNamespacePleaseInternalOnly[url] = files;
+        cachedFile[url] = files;
         //console.log("JR NOTE: returned from network for", url)
 
         resolve(files);
@@ -190,7 +191,7 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
         return [];
       }
     })
-    cachedWeirdVideoNamespacePleaseInternalOnly[url] = promise;
+    cachedFile[url] = promise;
     return promise;
   }
 
@@ -213,9 +214,9 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
       //loop
       setTimeout(() => {
         console.log("JR NOTE: begining gaslighting")
-        //wait a random amount of time, then try to load a secret
+        //wait a random amount of time but at least 13 seconds, then try to load a secret
         runSecret(pickFrom(scripts))
-      }, 10000 * Math.random())
+      }, 10000 * Math.random() + 13000)
         ;
 
     }
