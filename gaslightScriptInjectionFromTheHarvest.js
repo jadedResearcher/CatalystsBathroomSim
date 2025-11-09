@@ -92,7 +92,7 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
     //abs(10-12) = 2
     //12-2 = 8
     //8/48 = 1/6
-    const maxOdds = 4; //one in 4 odds;
+    const maxOdds = 2; //one in 2 odds;
     const divisor = 12 * maxOdds; //max value we can get for closesness is 12, so if we want 1/4 odds we need 12*4
 
     return (12 - Math.abs(currentHour - 12)) / divisor;
@@ -209,9 +209,14 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
     } else {
       //need to fetch one at random
       const scripts = await getWeirdScripts();
-      console.log("JR NOTE: scripts are", scripts)
-      runSecret(pickFrom(scripts));
-      //pick one at random, runSecret on it
+      console.log("JR NOTE: waiting...")
+      //loop
+      setTimeout(() => {
+        console.log("JR NOTE: begining gaslighting")
+        //wait a random amount of time, then try to load a secret
+        runSecret(pickFrom(scripts))
+      }, 10000 * Math.random())
+        ;
 
     }
   }
