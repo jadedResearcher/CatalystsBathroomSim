@@ -102,6 +102,7 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
   //file name is relative because you can't use this to trick someone
   //into running virus javascript or whatever
   const runSecret = async (fileName) => {
+    console.log(`JR NOTE: let's find out what ${fileName} does, together...Just gonna...inject it into the page...and if something explodes, that's part of the adventure, isn't it? The Harvest teaching the Cult to hack eyedol games sure is fun!!!`)
     const body = document.querySelector("body");
     const scriptTag = document.createElement("script")
     scriptTag.src = `${script_url}${fileName}`;
@@ -200,22 +201,23 @@ const runGaslightScriptInjectionFromTheHarvest = async (FILENAME, DEBUG) => {
 
 
   const odds = oddsGaslighting();
-  console.log("JR NOTE: odds are", odds);
+  console.log(`JR NOTE: Odds to gaslight are ${odds} (because the Harvest takes a lunch break around noon and the Cult are more unsupervised then.). So things going weird get more and more likely the closer we are to the Harvest's break. `);
   //we only proc when the odds are GREATER than math.random
   if (Math.random() < odds || FILENAME || DEBUG) {
-    console.log("JR NOTE: going to try to gaslight");
+    console.log("JR NOTE: going to try to gaslight :) :) ;)");
 
     if (FILENAME) {
       runSecret(FILENAME);
     } else {
       //need to fetch one at random
       const scripts = await getWeirdScripts();
-      console.log("JR NOTE: waiting...")
+      console.log("JR NOTE: waiting to start gaslighting (because isn't it funner if it takes a while to really get going?)")
       //loop
       setTimeout(() => {
-        console.log("JR NOTE: begining gaslighting")
+        const chosen = pickFrom(scripts);
+        console.log("JR NOTE: begining gaslighting with", chosen)
         //wait a random amount of time but at least 13 seconds, then try to load a secret
-        runSecret(pickFrom(scripts))
+        runSecret(chosen);
       }, 10000 * Math.random() + 13000)
         ;
 
